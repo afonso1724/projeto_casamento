@@ -61,7 +61,7 @@ function HomePage() {
             </a>
           </div>
           <p className="text-sm text-gray-500 mt-8">
-            Sistema WEE - Wedding Entry Experience 2026 💎
+            Sistema WEE - Wedding Entry Experience 2026 
           </p>
         </div>
       </div>
