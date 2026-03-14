@@ -15,8 +15,8 @@ export default function AgendaPage() {
     const fetchInviteData = async () => {
       try {
         setLoading(true);
-        // Chamada para a API usando o slug da URL
-        const response = await axios.get(`/api/convite/${slug}`);
+        // Substitua a linha do axios por esta (use o seu domínio real da Vercel):
+        const response = await axios.get(`https://projeto-casamento-sigma.vercel.app/api/convite/${slug}`);
         
         console.log("Dados recebidos da API:", response.data);
 
