@@ -15,17 +15,20 @@ export default function AgendaPage() {
     const fetchInviteData = async () => {
       try {
         setLoading(true);
+        // Chamada para a API usando o slug da URL
         const response = await axios.get(`/api/convite/${slug}`);
         
-        if (response.data.success) {
+        console.log("Dados recebidos da API:", response.data);
+
+        if (response.data && response.data.success) {
           setInviteData(response.data.data);
           setError(null);
         } else {
-          setError(response.data.message || 'Erro ao carregar agenda');
+          setError(response.data.message || 'Dados da agenda não encontrados.');
         }
       } catch (err) {
-        console.error('Erro ao buscar agenda:', err);
-        setError('Agenda não encontrada.');
+        console.error('Erro ao buscar agenda:', err.response?.data || err.message);
+        setError('Agenda não encontrada ou erro de conexão.');
       } finally {
         setLoading(false);
       }
@@ -79,11 +82,13 @@ export default function AgendaPage() {
     );
   }
 
-  const coupleNames = `${inviteData.coupleNames.name1}${inviteData.coupleNames.name2 ? ` & ${inviteData.coupleNames.name2}` : ''}`;
+  // Tratamento seguro para os nomes dos noivos
+  const name1 = inviteData.coupleNames?.name1 || "Noivos";
+  const name2 = inviteData.coupleNames?.name2;
+  const coupleNames = name2 ? `${name1} & ${name2}` : name1;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#FAF9F6] via-[#F8E8E3] to-[#E8D5CC] py-12 px-4">
-      {/* Decorative Background Elements */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
         <motion.div
           className="absolute top-20 right-10 w-80 h-80 bg-[#D4AF37] rounded-full opacity-5 blur-3xl"
@@ -98,7 +103,6 @@ export default function AgendaPage() {
       </div>
 
       <div className="max-w-2xl mx-auto">
-        {/* Voltar Button */}
         <motion.button
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -109,14 +113,12 @@ export default function AgendaPage() {
           Voltar ao Convite
         </motion.button>
 
-        {/* Header Card */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           className="bg-white rounded-3xl shadow-2xl overflow-hidden border-4 border-[#E8D5CC] mb-8"
         >
-          {/* Top Gradient */}
           <div className="bg-gradient-to-r from-[#6B2C3E] via-[#9DB4A8] to-[#D4AF37] h-40 relative overflow-hidden">
             <motion.div
               animate={{ rotate: 360 }}
@@ -125,7 +127,6 @@ export default function AgendaPage() {
             />
           </div>
 
-          {/* Content */}
           <div className="px-6 md:px-12 py-8 text-center">
             <motion.h1
               initial={{ opacity: 0, y: 10 }}
@@ -146,14 +147,13 @@ export default function AgendaPage() {
           </div>
         </motion.div>
 
-        {/* Event Info Cards */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.4 }}
           className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8"
         >
-          {/* Data */}
+          {/* Data do Evento */}
           <motion.div
             whileHover={{ translateY: -4 }}
             className="bg-white rounded-2xl p-6 md:p-8 shadow-lg border-4 border-[#E8D5CC]"
@@ -165,12 +165,14 @@ export default function AgendaPage() {
               <h3 className="font-serif text-lg font-bold text-[#6B2C3E]">Data do Evento</h3>
             </div>
             <p className="text-2xl font-serif font-bold text-[#5C3D2E]">
-              {new Date(inviteData.eventDetails.date).toLocaleDateString('pt-BR', {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-              })}
+              {inviteData.eventDetails?.date 
+                ? new Date(inviteData.eventDetails.date).toLocaleDateString('pt-BR', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })
+                : "Data em breve"}
             </p>
           </motion.div>
 
@@ -186,12 +188,11 @@ export default function AgendaPage() {
               <h3 className="font-serif text-lg font-bold text-[#6B2C3E]">Local</h3>
             </div>
             <p className="text-2xl font-serif font-bold text-[#5C3D2E]">
-              {inviteData.eventDetails.location}
+              {inviteData.eventDetails?.location || "A definir"}
             </p>
           </motion.div>
         </motion.div>
 
-        {/* Timeline Section */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -203,45 +204,46 @@ export default function AgendaPage() {
           </h2>
 
           <div className="space-y-6">
-            {inviteData.eventDetails.timeline.map((event, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ x: -30, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ delay: 0.6 + idx * 0.1 }}
-                whileHover={{ translateX: 8 }}
-                className="group"
-              >
-                <div className="flex items-start gap-6 md:gap-8">
-                  {/* Timeline Dot e Linha */}
-                  <div className="flex flex-col items-center pt-1">
-                    <div className="w-6 h-6 bg-[#D4AF37] rounded-full ring-4 ring-[#FAF9F6] shadow-lg group-hover:ring-[#E8D5CC] transition-all" />
-                    {idx < inviteData.eventDetails.timeline.length - 1 && (
-                      <div className="w-1 h-16 bg-gradient-to-b from-[#D4AF37] to-[#E8D5CC] mt-2" />
-                    )}
-                  </div>
+            {inviteData.eventDetails?.timeline?.length > 0 ? (
+              inviteData.eventDetails.timeline.map((event, idx) => (
+                <motion.div
+                  key={idx}
+                  initial={{ x: -30, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ delay: 0.6 + idx * 0.1 }}
+                  whileHover={{ translateX: 8 }}
+                  className="group"
+                >
+                  <div className="flex items-start gap-6 md:gap-8">
+                    <div className="flex flex-col items-center pt-1">
+                      <div className="w-6 h-6 bg-[#D4AF37] rounded-full ring-4 ring-[#FAF9F6] shadow-lg group-hover:ring-[#E8D5CC] transition-all" />
+                      {idx < inviteData.eventDetails.timeline.length - 1 && (
+                        <div className="w-1 h-16 bg-gradient-to-b from-[#D4AF37] to-[#E8D5CC] mt-2" />
+                      )}
+                    </div>
 
-                  {/* Conteúdo do Evento */}
-                  <div className="flex-1 py-2">
-                    <div className="bg-gradient-to-r from-[#FAF9F6] to-[#F8E8E3] p-6 rounded-2xl border-l-4 border-[#D4AF37] hover:shadow-lg transition-all">
-                      <div className="flex items-center gap-2 mb-2">
-                        <Clock size={18} className="text-[#D4AF37]" />
-                        <span className="font-serif text-xl font-bold text-[#6B2C3E]">
-                          {event.time}
-                        </span>
+                    <div className="flex-1 py-2">
+                      <div className="bg-gradient-to-r from-[#FAF9F6] to-[#F8E8E3] p-6 rounded-2xl border-l-4 border-[#D4AF37] hover:shadow-lg transition-all">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Clock size={18} className="text-[#D4AF37]" />
+                          <span className="font-serif text-xl font-bold text-[#6B2C3E]">
+                            {event.time}
+                          </span>
+                        </div>
+                        <p className="text-lg text-[#5C3D2E] font-serif">
+                          {event.event}
+                        </p>
                       </div>
-                      <p className="text-lg text-[#5C3D2E] font-serif">
-                        {event.event}
-                      </p>
                     </div>
                   </div>
-                </div>
-              </motion.div>
-            ))}
+                </motion.div>
+              ))
+            ) : (
+              <p className="text-center text-[#A8B4A8] font-serif">O cronograma será atualizado em breve.</p>
+            )}
           </div>
         </motion.div>
 
-        {/* Footer Message */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
