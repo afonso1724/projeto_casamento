@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-export default function QRCodeGenerator({ guestData, baseURL = 'https://projeto_casamento.vercel.app' }) {
+export default function QRCodeGenerator({ guestData, baseURL = 'https://projeto-casamento-sigma.vercel.app'}) {
   if (!guestData) return null;
 
   const conviteURL = `${baseURL}/convite/${guestData.slug}`;

@@ -4,7 +4,7 @@ import QRCode from 'qrcode.react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Users, Plus, BarChart3, Search, Eye, Trash2, Download, CheckCircle2, Circle, Gift } from 'lucide-react';
 
-const FRONTEND_URL = 'https://projeto_casamento.vercel.app';
+const FRONTEND_URL = 'https://projeto-casamento-sigma.vercel.app';
 
 export default function AdminPage() {
   const [currentView, setCurrentView] = useState('cadastro');
