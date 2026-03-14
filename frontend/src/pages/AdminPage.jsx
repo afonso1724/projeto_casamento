@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { supabase } from '../supabaseClient';
+import { supabase, isSupabaseConfigured, supabaseInitError } from '../supabaseClient';
 import QRCode from 'qrcode.react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Users, Plus, BarChart3, Search, Eye, Trash2, Download, CheckCircle2, Circle, Gift } from 'lucide-react';
@@ -18,6 +18,23 @@ export default function AdminPage() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [qrModalOpen, setQrModalOpen] = useState(false);
   const [selectedQrSlug, setSelectedQrSlug] = useState(null);
+
+  if (!isSupabaseConfigured) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-8 bg-stone-50">
+        <div className="max-w-xl bg-white rounded-2xl shadow-xl p-8 text-center">
+          <h1 className="text-2xl font-bold mb-2">Erro de configuração do Supabase</h1>
+          <p className="text-sm text-gray-600 mb-4">
+            {supabaseInitError ||
+              'Supabase não está configurado. Defina VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY no painel do Vercel.'}
+          </p>
+          <p className="text-xs text-gray-400">
+            No ambiente de produção, configure as variáveis de ambiente no painel do Vercel.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   // Buscar todos os convidados
 const fetchConvidados = async () => {

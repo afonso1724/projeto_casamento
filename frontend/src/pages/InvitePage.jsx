@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { supabase } from '../supabaseClient';
+import { supabase, isSupabaseConfigured, supabaseInitError } from '../supabaseClient';
 import { motion } from 'framer-motion';
 import { CheckCircle2, AlertCircle, ArrowRight, Heart } from 'lucide-react';
 
@@ -12,6 +12,28 @@ export default function InvitePage() {
   const [error, setError] = useState(null);
   const [confirmingPresence, setConfirmingPresence] = useState(false);
   const [confirmationMessage, setConfirmationMessage] = useState(null);
+
+  if (!isSupabaseConfigured) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-[#FAF9F6] to-[#F8E8E3] flex items-center justify-center p-4">
+        <div className="max-w-md bg-white p-8 rounded-2xl shadow-2xl border-4 border-[#E8D5CC] text-center">
+          <h2 className="text-2xl font-serif font-bold text-[#5C3D2E] mb-3">
+            Erro de configuração
+          </h2>
+          <p className="text-[#A8B4A8] mb-4">
+            {supabaseInitError ||
+              'Supabase não está configurado. Defina VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY no painel do Vercel.'}
+          </p>
+          <a
+            href="/"
+            className="inline-block bg-[#D4AF37] hover:bg-[#C9A961] text-white px-8 py-3 rounded-lg font-bold transition-all hover:scale-105"
+          >
+            ← Voltar ao Início
+          </a>
+        </div>
+      </div>
+    );
+  }
 
   useEffect(() => {
     const fetchInviteData = async () => {
