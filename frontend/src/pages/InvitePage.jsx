@@ -59,8 +59,10 @@ export default function InvitePage() {
   const handleConfirmPresence = async () => {
     setConfirmingPresence(true);
     try {
+      // Usando o campo 'confirmado_presenca' conforme o seu banco
       const { error } = await supabase.from('convidados').update({ confirmado_presenca: true }).eq('slug', slug);
       if (error) throw error;
+      
       setInviteData({ ...inviteData, confirmado_presenca: true });
       setConfirmationMessage({
         type: 'success',
@@ -131,23 +133,24 @@ export default function InvitePage() {
     );
   }
 
-  if (!inviteData) {
-    return null;
-  }
+  if (!inviteData) return null;
 
-  const coupleNames = `${inviteData.coupleNames.name1}${inviteData.coupleNames.name2 ? ` & ${inviteData.coupleNames.name2}` : ''}`;
+  // --- ALTERAÇÕES DE SEGURANÇA AQUI ---
+  const name1 = inviteData?.coupleNames?.name1 || "Noivos";
+  const name2 = inviteData?.coupleNames?.name2;
+  const coupleNames = name2 ? `${name1} & ${name2}` : name1;
   
   const getWelcomeMessage = () => {
-    if (inviteData.tipo === 'Casal') {
-      return `Caro casal ${inviteData.nomeExibicao}`;
-    } else {
-      return `Caro ${inviteData.nomeExibicao}`;
-    }
+    const nome = inviteData?.nomeExibicao || "Convidado";
+    return inviteData?.tipo === 'Casal' ? `Caro casal ${nome}` : `Caro ${nome}`;
   };
+
+  // Verificando se já está confirmado (usando o campo do banco)
+  const isAlreadyConfirmed = inviteData?.confirmado_presenca === true;
+  // ------------------------------------
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#FAF9F6] via-[#F8E8E3] to-[#E8D5CC] py-12 md:py-16 px-4">
-      {/* Decorative Background */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
         <motion.div
           className="absolute top-10 right-10 w-96 h-96 bg-[#D4AF37] rounded-full opacity-5 blur-3xl"
@@ -162,7 +165,6 @@ export default function InvitePage() {
       </div>
 
       <div className="max-w-2xl mx-auto">
-        {/* Notification */}
         {confirmationMessage && (
           <motion.div
             initial={{ y: -20, opacity: 0 }}
@@ -178,16 +180,13 @@ export default function InvitePage() {
           </motion.div>
         )}
 
-        {/* Main Invitation Card */}
         <motion.div
           initial={{ opacity: 0, y: 20, scale: 0.95 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ duration: 0.8 }}
           className="relative bg-white rounded-3xl shadow-2xl overflow-hidden border-4 border-[#E8D5CC]"
         >
-          {/* Decorative Header */}
           <div className="bg-gradient-to-r from-[#6B2C3E] via-[#9DB4A8] to-[#D4AF37] h-56 md:h-72 relative overflow-hidden">
-            {/* Animated Elements */}
             <motion.div
               animate={{ rotate: 360 }}
               transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
@@ -198,8 +197,6 @@ export default function InvitePage() {
               transition={{ duration: 40, repeat: Infinity, ease: 'linear' }}
               className="absolute -left-32 -bottom-32 w-64 h-64 border-2 border-white rounded-full opacity-10"
             />
-
-            {/* Animated Heart */}
             <motion.div
               animate={{ scale: [1, 1.15, 1] }}
               transition={{ duration: 2.5, repeat: Infinity }}
@@ -209,9 +206,7 @@ export default function InvitePage() {
             </motion.div>
           </div>
 
-          {/* Main Content */}
           <div className="px-6 md:px-16 py-12 md:py-16 text-center">
-            {/* Welcome Message - Deep and Striking */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -229,7 +224,6 @@ export default function InvitePage() {
               </p>
             </motion.div>
 
-            {/* Decorative Divider */}
             <motion.div
               initial={{ scaleX: 0 }}
               animate={{ scaleX: 1 }}
@@ -237,7 +231,6 @@ export default function InvitePage() {
               className="w-32 h-1 bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent mx-auto mb-8 md:mb-12"
             />
 
-            {/* Couple Names */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -252,7 +245,6 @@ export default function InvitePage() {
               </p>
             </motion.div>
 
-            {/* Guest Info Card */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -263,22 +255,20 @@ export default function InvitePage() {
                 Seu Convite
               </p>
               <p className="text-2xl md:text-3xl font-serif font-bold text-[#5C3D2E] mb-2">
-                {inviteData.nomeExibicao}
+                {inviteData?.nomeExibicao}
               </p>
               <p className="text-[#A8B4A8] font-serif">
-                Tipo: {inviteData.tipo} • Código: {slug}
+                Tipo: {inviteData?.tipo} • Código: {slug}
               </p>
             </motion.div>
 
-            {/* Action Buttons */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6 }}
               className="space-y-4 mb-8"
             >
-              {/* Confirm Presence Button */}
-              {!inviteData.confirmadoPresenca ? (
+              {!isAlreadyConfirmed ? (
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.98 }}
@@ -296,7 +286,6 @@ export default function InvitePage() {
                 </div>
               )}
 
-              {/* View Agenda Button */}
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.98 }}
@@ -308,32 +297,23 @@ export default function InvitePage() {
               </motion.button>
             </motion.div>
 
-            {/* Status Indicator */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.7 }}
               className={`p-4 md:p-5 rounded-xl font-bold text-center border-2 ${
-                inviteData.confirmadoPresenca
+                isAlreadyConfirmed
                   ? 'bg-green-50 text-green-800 border-green-300'
                   : 'bg-orange-50 text-orange-800 border-orange-300'
               }`}
             >
-              {inviteData.confirmadoPresenca ? (
-                <span className="flex items-center justify-center gap-2 font-serif">
-                  <CheckCircle2 size={20} />
-                  Sua presença está confirmada
-                </span>
-              ) : (
-                <span className="flex items-center justify-center gap-2 font-serif">
-                  <AlertCircle size={20} />
-                  Por favor, confirme sua presença
-                </span>
-              )}
+              <span className="flex items-center justify-center gap-2 font-serif">
+                {isAlreadyConfirmed ? <CheckCircle2 size={20} /> : <AlertCircle size={20} />}
+                {isAlreadyConfirmed ? 'Sua presença está confirmada' : 'Por favor, confirme sua presença'}
+              </span>
             </motion.div>
           </div>
 
-          {/* Footer */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
