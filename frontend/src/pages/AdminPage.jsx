@@ -776,7 +776,7 @@ const handleCreateGuest = async (e) => {
                       className="w-full bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-3 rounded-lg font-bold hover:shadow-lg transition-all flex items-center justify-center gap-2"
                     >
                       <Download size={18} />
-                      Baixar QR Code
+                      Baixar o QR Code
                     </button>
                   </div>
                 </motion.div>
