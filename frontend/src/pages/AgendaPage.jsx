@@ -11,24 +11,42 @@ export default function AgendaPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
+useEffect(() => {
     const fetchInviteData = async () => {
       try {
         setLoading(true);
-        // Substitua a linha do axios por esta (use o seu domínio real da Vercel):
-        const response = await axios.get(`https://projeto-casamento-sigma.vercel.app/api/convite/${slug}`);
         
-        console.log("Dados recebidos da API:", response.data);
+        // 1. IMPORTANTE: Use o seu cliente do supabase aqui
+        // Se o seu ficheiro de configuração se chamar 'supabaseClient', importe-o no topo
+        const { data, error: supabaseError } = await supabase
+          .from('convidados')
+          .select('*')
+          .eq('slug', slug) // ou 'id', dependendo de como guardou o código YN8BWM
+          .single();
 
-        if (response.data && response.data.success) {
-          setInviteData(response.data.data);
+        if (supabaseError) throw supabaseError;
+
+        if (data) {
+          // Mapeamos os dados do Supabase para o formato que o seu componente usa
+          // Ajuste os nomes das colunas conforme estão na sua tabela
+          setInviteData({
+            coupleNames: {
+              name1: data.nome_noivo || "Noivo", 
+              name2: data.nome_noiva || "Noiva"
+            },
+            eventDetails: {
+              date: data.data_evento,
+              location: data.local_evento,
+              timeline: data.cronograma || [] // Assumindo que guarda o JSON do cronograma
+            }
+          });
           setError(null);
         } else {
-          setError(response.data.message || 'Dados da agenda não encontrados.');
+          setError('Convidado não encontrado.');
         }
       } catch (err) {
-        console.error('Erro ao buscar agenda:', err.response?.data || err.message);
-        setError('Agenda não encontrada ou erro de conexão.');
+        console.error('Erro ao buscar no Supabase:', err);
+        setError('Não conseguimos carregar os detalhes da agenda.');
       } finally {
         setLoading(false);
       }
