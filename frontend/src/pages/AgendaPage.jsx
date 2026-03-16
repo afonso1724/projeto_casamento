@@ -3,6 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Clock, MapPin, Heart } from 'lucide-react';
+// Adicione esta linha:
+import { supabase } from '../supabaseClient';
 
 export default function AgendaPage() {
   const { slug } = useParams();
