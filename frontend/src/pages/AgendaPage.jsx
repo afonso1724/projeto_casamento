@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Clock, MapPin, Heart } from 'lucide-react';
-// Adicione esta linha:
-import { supabase } from '../supabaseClient';
+import { ArrowLeft, Clock, MapPin, Heart, Navigation } from 'lucide-react';
+import { supabase } from '../supabaseClient'; 
 
 export default function AgendaPage() {
   const { slug } = useParams();
@@ -13,267 +11,150 @@ export default function AgendaPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-useEffect(() => {
+  useEffect(() => {
     const fetchInviteData = async () => {
       try {
         setLoading(true);
-        
-        // 1. IMPORTANTE: Use o seu cliente do supabase aqui
-        // Se o seu ficheiro de configuração se chamar 'supabaseClient', importe-o no topo
         const { data, error: supabaseError } = await supabase
           .from('convidados')
           .select('*')
-          .eq('slug', slug) // ou 'id', dependendo de como guardou o código YN8BWM
+          .eq('slug', slug)
           .single();
 
         if (supabaseError) throw supabaseError;
 
         if (data) {
-          // Mapeamos os dados do Supabase para o formato que o seu componente usa
-          // Ajuste os nomes das colunas conforme estão na sua tabela
           setInviteData({
             coupleNames: {
-              name1: data.nome_noivo || "Noivo", 
-              name2: data.nome_noiva || "Noiva"
+              name1: data.nome_noivo || "Afonso", 
+              name2: data.nome_noiva || "Daniela"
             },
             eventDetails: {
-              date: data.data_evento,
-              location: data.local_evento,
-              timeline: data.cronograma || [] // Assumindo que guarda o JSON do cronograma
+              // Informações Reais solicitadas
+              date: "2026-05-23", 
+              location: "Salão de Festas - Luanda, Angola",
+              googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=Luanda+Angola",
+              timeline: [
+                { time: "15:30", event: "Chegada dos Convidados" },
+                { time: "16:00", event: "Início da Cerimónia" },
+                { time: "17:30", event: "Sessão de Fotos e Cocktail" },
+                { time: "19:00", event: "Jantar de Gala" },
+                { time: "21:00", event: "Corte do Bolo" },
+                { time: "22:00", event: "Início da Festa / DJ" }
+              ]
             }
           });
-          setError(null);
-        } else {
-          setError('Convidado não encontrado.');
         }
       } catch (err) {
-        console.error('Erro ao buscar no Supabase:', err);
+        console.error('Erro:', err);
         setError('Não conseguimos carregar os detalhes da agenda.');
       } finally {
         setLoading(false);
       }
     };
 
-    if (slug) {
-      fetchInviteData();
-    }
+    if (slug) fetchInviteData();
   }, [slug]);
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#FAF9F6] to-[#F8E8E3] flex items-center justify-center p-4">
-        <div className="text-center">
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
-            className="inline-block mb-4"
-          >
-            <Heart size={48} className="text-[#6B2C3E]" />
-          </motion.div>
-          <p className="text-[#5C3D2E] font-serif text-lg">
-            Carregando agenda...
-          </p>
-        </div>
+      <div className="min-h-screen bg-[#FAF9F6] flex items-center justify-center p-4">
+        <Heart size={48} className="text-[#6B2C3E] animate-pulse" />
       </div>
     );
   }
 
   if (error || !inviteData) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#FAF9F6] to-[#F8E8E3] flex items-center justify-center p-4">
-        <motion.div
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          className="text-center max-w-md bg-white p-8 md:p-12 rounded-2xl shadow-2xl border-4 border-[#E8D5CC]"
-        >
-          <h2 className="text-3xl font-serif font-bold text-[#5C3D2E] mb-3">
-            Agenda não encontrada
-          </h2>
-          <p className="text-[#A8B4A8] mb-8 text-lg">{error}</p>
-          <button
-            onClick={() => navigate(-1)}
-            className="inline-flex items-center gap-2 bg-[#D4AF37] hover:bg-[#C9A961] text-white px-8 py-3 rounded-lg font-bold transition-all hover:scale-105"
-          >
-            <ArrowLeft size={20} />
-            Voltar
-          </button>
-        </motion.div>
+      <div className="min-h-screen bg-[#FAF9F6] flex items-center justify-center p-4 text-center">
+        <p className="text-[#6B2C3E] font-serif text-xl">{error}</p>
       </div>
     );
   }
 
-  // Tratamento seguro para os nomes dos noivos
-  const name1 = inviteData.coupleNames?.name1 || "Noivos";
-  const name2 = inviteData.coupleNames?.name2;
-  const coupleNames = name2 ? `${name1} & ${name2}` : name1;
+  const coupleNames = `${inviteData.coupleNames.name1} & ${inviteData.coupleNames.name2}`;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#FAF9F6] via-[#F8E8E3] to-[#E8D5CC] py-12 px-4">
-      <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
-        <motion.div
-          className="absolute top-20 right-10 w-80 h-80 bg-[#D4AF37] rounded-full opacity-5 blur-3xl"
-          animate={{ y: [0, 40, 0], x: [0, -40, 0] }}
-          transition={{ duration: 10, repeat: Infinity }}
-        />
-        <motion.div
-          className="absolute bottom-20 left-10 w-80 h-80 bg-[#6B2C3E] rounded-full opacity-5 blur-3xl"
-          animate={{ y: [0, -40, 0], x: [0, 40, 0] }}
-          transition={{ duration: 12, repeat: Infinity, delay: 1 }}
-        />
-      </div>
-
       <div className="max-w-2xl mx-auto">
-        <motion.button
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
+        <button 
           onClick={() => navigate(-1)}
-          className="flex items-center gap-2 text-[#6B2C3E] hover:text-[#C9A961] font-serif font-bold mb-8 transition-colors"
+          className="flex items-center gap-2 text-[#6B2C3E] font-bold mb-8 hover:opacity-70 transition-all"
         >
-          <ArrowLeft size={20} />
-          Voltar ao Convite
-        </motion.button>
+          <ArrowLeft size={20} /> Voltar ao Convite
+        </button>
 
-        <motion.div
+        {/* Card Principal */}
+        <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
           className="bg-white rounded-3xl shadow-2xl overflow-hidden border-4 border-[#E8D5CC] mb-8"
         >
-          <div className="bg-gradient-to-r from-[#6B2C3E] via-[#9DB4A8] to-[#D4AF37] h-40 relative overflow-hidden">
-            <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
-              className="absolute -right-20 -top-20 w-40 h-40 border-2 border-[#D4AF37] rounded-full opacity-20"
-            />
+          <div className="bg-[#6B2C3E] py-12 text-center px-6">
+            <h1 className="font-serif text-4xl text-white font-bold mb-2">Agenda do Evento</h1>
+            <p className="text-[#D4AF37] font-serif text-xl uppercase tracking-widest">{coupleNames}</p>
           </div>
 
-          <div className="px-6 md:px-12 py-8 text-center">
-            <motion.h1
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="font-serif text-4xl md:text-5xl font-bold text-[#6B2C3E] mb-2"
-            >
-              Agenda do Evento
-            </motion.h1>
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.3 }}
-              className="text-[#A8B4A8] font-serif text-lg"
-            >
-              {coupleNames}
-            </motion.p>
+          <div className="p-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Data */}
+            <div className="bg-[#FAF9F6] p-6 rounded-2xl border-2 border-[#E8D5CC]">
+              <div className="flex items-center gap-3 mb-2">
+                <Clock className="text-[#6B2C3E]" size={24} />
+                <span className="font-bold text-[#6B2C3E]">Data</span>
+              </div>
+              <p className="text-xl font-serif text-[#5C3D2E]">Sábado, 23 de Maio de 2026</p>
+            </div>
+
+            {/* Local com Botão de Mapa */}
+            <div className="bg-[#FAF9F6] p-6 rounded-2xl border-2 border-[#E8D5CC]">
+              <div className="flex items-center gap-3 mb-2">
+                <MapPin className="text-[#6B2C3E]" size={24} />
+                <span className="font-bold text-[#6B2C3E]">Localização</span>
+              </div>
+              <p className="text-lg font-serif text-[#5C3D2E] mb-4">{inviteData.eventDetails.location}</p>
+              <a 
+                href={inviteData.eventDetails.googleMapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 bg-[#D4AF37] text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-[#C9A961] transition-colors"
+              >
+                <Navigation size={16} /> Abrir GPS
+              </a>
+            </div>
           </div>
         </motion.div>
 
-        <motion.div
+        {/* Cronograma Estilizado */}
+        <motion.div 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.4 }}
-          className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8"
+          transition={{ delay: 0.3 }}
+          className="bg-white rounded-3xl shadow-2xl p-8 border-4 border-[#E8D5CC]"
         >
-          {/* Data do Evento */}
-          <motion.div
-            whileHover={{ translateY: -4 }}
-            className="bg-white rounded-2xl p-6 md:p-8 shadow-lg border-4 border-[#E8D5CC]"
-          >
-            <div className="flex items-center gap-3 mb-4">
-              <div className="bg-[#E8D5CC] p-3 rounded-lg">
-                <Heart size={24} className="text-[#6B2C3E]" />
-              </div>
-              <h3 className="font-serif text-lg font-bold text-[#6B2C3E]">Data do Evento</h3>
-            </div>
-            <p className="text-2xl font-serif font-bold text-[#5C3D2E]">
-              {inviteData.eventDetails?.date 
-                ? new Date(inviteData.eventDetails.date).toLocaleDateString('pt-BR', {
-                    weekday: 'long',
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                  })
-                : "Data em breve"}
-            </p>
-          </motion.div>
-
-          {/* Local */}
-          <motion.div
-            whileHover={{ translateY: -4 }}
-            className="bg-white rounded-2xl p-6 md:p-8 shadow-lg border-4 border-[#E8D5CC]"
-          >
-            <div className="flex items-center gap-3 mb-4">
-              <div className="bg-[#E8D5CC] p-3 rounded-lg">
-                <MapPin size={24} className="text-[#6B2C3E]" />
-              </div>
-              <h3 className="font-serif text-lg font-bold text-[#6B2C3E]">Local</h3>
-            </div>
-            <p className="text-2xl font-serif font-bold text-[#5C3D2E]">
-              {inviteData.eventDetails?.location || "A definir"}
-            </p>
-          </motion.div>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-          className="bg-white rounded-3xl shadow-2xl p-8 md:p-12 border-4 border-[#E8D5CC]"
-        >
-          <h2 className="font-serif text-3xl md:text-4xl font-bold text-[#6B2C3E] mb-12 text-center">
-            Cronograma
-          </h2>
-
-          <div className="space-y-6">
-            {inviteData.eventDetails?.timeline?.length > 0 ? (
-              inviteData.eventDetails.timeline.map((event, idx) => (
-                <motion.div
-                  key={idx}
-                  initial={{ x: -30, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  transition={{ delay: 0.6 + idx * 0.1 }}
-                  whileHover={{ translateX: 8 }}
-                  className="group"
-                >
-                  <div className="flex items-start gap-6 md:gap-8">
-                    <div className="flex flex-col items-center pt-1">
-                      <div className="w-6 h-6 bg-[#D4AF37] rounded-full ring-4 ring-[#FAF9F6] shadow-lg group-hover:ring-[#E8D5CC] transition-all" />
-                      {idx < inviteData.eventDetails.timeline.length - 1 && (
-                        <div className="w-1 h-16 bg-gradient-to-b from-[#D4AF37] to-[#E8D5CC] mt-2" />
-                      )}
-                    </div>
-
-                    <div className="flex-1 py-2">
-                      <div className="bg-gradient-to-r from-[#FAF9F6] to-[#F8E8E3] p-6 rounded-2xl border-l-4 border-[#D4AF37] hover:shadow-lg transition-all">
-                        <div className="flex items-center gap-2 mb-2">
-                          <Clock size={18} className="text-[#D4AF37]" />
-                          <span className="font-serif text-xl font-bold text-[#6B2C3E]">
-                            {event.time}
-                          </span>
-                        </div>
-                        <p className="text-lg text-[#5C3D2E] font-serif">
-                          {event.event}
-                        </p>
-                      </div>
-                    </div>
+          <h2 className="font-serif text-3xl font-bold text-[#6B2C3E] mb-10 text-center">Cronograma</h2>
+          
+          <div className="relative border-l-4 border-[#D4AF37] ml-4 space-y-12">
+            {inviteData.eventDetails.timeline.map((item, idx) => (
+              <div key={idx} className="relative ml-8">
+                {/* O círculo na linha do tempo */}
+                <div className="absolute -left-[44px] top-1 w-6 h-6 bg-[#D4AF37] rounded-full border-4 border-white shadow-md" />
+                
+                <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-6">
+                  <span className="text-[#6B2C3E] font-bold text-xl font-serif min-w-[80px]">
+                    {item.time}
+                  </span>
+                  <div className="bg-[#FAF9F6] p-4 rounded-xl flex-1 shadow-sm border border-[#E8D5CC]">
+                    <p className="text-[#5C3D2E] font-medium text-lg">{item.event}</p>
                   </div>
-                </motion.div>
-              ))
-            ) : (
-              <p className="text-center text-[#A8B4A8] font-serif">O cronograma será atualizado em breve.</p>
-            )}
+                </div>
+              </div>
+            ))}
           </div>
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.2 }}
-          className="mt-12 text-center"
-        >
-          <p className="text-[#6B2C3E] font-serif text-lg">
-            Esperamos você em cada momento especial deste dia! 💕
-          </p>
-        </motion.div>
+        <footer className="mt-12 text-center text-[#6B2C3E] font-serif italic">
+          <p>Prepare o seu melhor sorriso, esperamos por si!</p>
+        </footer>
       </div>
     </div>
   );
