@@ -740,12 +740,10 @@ export default function InvitePage() {
           <div className="border-t border-slate-700 pt-8 mt-8">
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
               <p className="text-slate-400 text-sm">
-                © 2026 Afonso & Daniela - Experiência de Casamento Digital
+                © 2026 SynerTch - Experiência de Casamento Digital
               </p>
               <div className="flex items-center gap-6 text-sm text-slate-400">
-                <span>Criado com ❤️</span>
-                <span>•</span>
-                <span>Wedding Experience</span>
+                <span>Todos os direitos reservados</span>
               </div>
             </div>
           </div>
