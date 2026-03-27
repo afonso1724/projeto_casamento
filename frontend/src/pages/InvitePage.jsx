@@ -600,7 +600,7 @@ export default function InvitePage() {
       >
         <Heart size={32} className="text-rose-400 fill-rose-400 mx-auto mb-4" />
         <p className="text-lg font-serif mb-2">Obrigado por fazer parte do nosso grande dia!</p>
-        <p className="text-sm text-gray-400">© 2026 - Wedding Experience</p>
+        <p className="text-sm text-gray-400">© 2026 - SynerTech | Todos os direitos reservados</p>
       </motion.section>
     </div>
   );
