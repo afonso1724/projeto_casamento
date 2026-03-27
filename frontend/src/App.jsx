@@ -1,10 +1,15 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useParams, Navigate } from 'react-router-dom';
 import InvitePage from './pages/InvitePage';
 import AdminPage from './pages/AdminPage';
 import LoginPage from './pages/LoginPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import './index.css';
+
+function RedirectToHome() {
+  const { slug } = useParams();
+  return <Navigate to={`/?qr=${slug}`} replace />;
+}
 
 function App() {
   return (
@@ -13,6 +18,7 @@ function App() {
         <Route path="/" element={<InvitePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/admin" element={<ProtectedRoute><AdminPage /></ProtectedRoute>} />
+        <Route path="/convite/:slug" element={<RedirectToHome />} />
       </Routes>
     </Router>
   );
