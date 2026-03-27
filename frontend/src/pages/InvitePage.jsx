@@ -145,7 +145,7 @@ export default function InvitePage() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
         <motion.div animate={{ rotate: 360 }} transition={{ duration: 2, repeat: Infinity }}>
-          <Heart size={48} className="text-rose-600 fill-rose-600" />
+          <Heart size={48} className="text-slate-600 fill-slate-600" />
         </motion.div>
       </div>
     );
@@ -281,7 +281,7 @@ export default function InvitePage() {
             </motion.div>
 
             <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 font-serif">
-              Olá, <span className="text-rose-600">{guestName}</span>
+              Olá, <span className="text-slate-700">{guestName}</span>
             </h2>
             <p className="text-xl text-gray-700 font-serif mb-6">
               Seja bem-vindo ao nosso grande dia!
@@ -471,10 +471,10 @@ export default function InvitePage() {
                 transition={{ delay: idx * 0.15 }}
                 viewport={{ once: true }}
                 whileHover={{ scale: 1.05, y: -5 }}
-                className="bg-white rounded-2xl p-8 border-2 border-rose-200 shadow-lg hover:shadow-2xl transition-all duration-300"
+                className="bg-white rounded-2xl p-8 border-2 border-slate-200 shadow-lg hover:shadow-2xl transition-all duration-300"
               >
                 <div className="text-4xl mb-4 text-center">{card.icon}</div>
-                <h3 className="text-2xl font-bold text-rose-600 mb-6 font-serif text-center">{card.title}</h3>
+                <h3 className="text-2xl font-bold text-slate-800 mb-6 font-serif text-center">{card.title}</h3>
                 <ul className="space-y-3">
                   {card.items.map((item, i) => (
                     <motion.li
@@ -554,7 +554,7 @@ export default function InvitePage() {
                         key={idx}
                         onClick={() => setJourneyIndices(prev => prev.map((i, cardI) => cardI === cardIdx ? idx : i))}
                         className={`w-2 h-2 rounded-full transition-all ${
-                          idx === journeyIndices[cardIdx] ? 'bg-rose-400 w-6' : 'bg-white/50'
+                          idx === journeyIndices[cardIdx] ? 'bg-slate-500 w-6' : 'bg-white/50'
                         }`}
                       />
                     ))}
@@ -730,8 +730,8 @@ export default function InvitePage() {
                 Este é o nosso grande dia.
               </p>
               <div className="flex items-center gap-2">
-                <Heart size={20} className="text-rose-400 fill-rose-400" />
-                <span className="text-rose-300 font-medium">Para Sempre</span>
+                <Heart size={20} className="text-slate-500 fill-slate-500" />
+                <span className="text-slate-300 font-medium">Para Sempre</span>
               </div>
             </div>
           </div>
@@ -740,7 +740,7 @@ export default function InvitePage() {
           <div className="border-t border-slate-700 pt-8 mt-8">
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
               <p className="text-slate-400 text-sm">
-                © 2026 SynerTch - Experiência de Casamento Digital
+                © 2026 SynerTech - Experiência de Casamento Digital
               </p>
               <div className="flex items-center gap-6 text-sm text-slate-400">
                 <span>Todos os direitos reservados</span>
