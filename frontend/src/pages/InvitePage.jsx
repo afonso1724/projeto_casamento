@@ -5,13 +5,34 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Heart, ChevronLeft, ChevronRight, MapPin } from 'lucide-react';
 
 const CONSELHOS = [
-  'Traga sapatos confortáveis',
-  'Prepare o coração',
-  'Não esqueça o sorriso',
-  'Chegue com antecedência',
-  'Divirta-se ao máximo',
-  'Capture momentos inesquecíveis',
-  'Celebre o amor acima de tudo',
+  {
+    titulo: 'Elegância no Vestuário',
+    descricao: 'Traga sapatos confortáveis e vista-se com elegância para celebrar este momento especial.'
+  },
+  {
+    titulo: 'Preparação Emocional',
+    descricao: 'Prepare o seu coração para momentos inesquecíveis e viva cada instante com intensidade.'
+  },
+  {
+    titulo: 'Expressão de Alegria',
+    descricao: 'Não esqueça o seu sorriso contagiante - ele será a melhor decoração da festa.'
+  },
+  {
+    titulo: 'Pontualidade',
+    descricao: 'Chegue com antecedência para aproveitar cada detalhe desta celebração única.'
+  },
+  {
+    titulo: 'Entrega Total',
+    descricao: 'Divirta-se ao máximo, dance, cante e celebre o amor que nos une a todos.'
+  },
+  {
+    titulo: 'Memórias Eternas',
+    descricao: 'Capture momentos inesquecíveis com fotografias e guarde-os no coração para sempre.'
+  },
+  {
+    titulo: 'Celebração do Amor',
+    descricao: 'Celebre o amor acima de tudo - ele é a razão desta festa memorável.'
+  },
 ];
 
 const JOURNEY_CARDS = [
@@ -147,18 +168,18 @@ export default function InvitePage() {
 
   return (
     <div className="bg-white overflow-hidden">
-      {/* HERO SECTION (Parallax) */}
+      {/* HERO SECTION (Parallax Enhanced) */}
       <motion.section
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         className="relative h-screen flex items-center justify-center overflow-hidden"
       >
-        {/* Background Image */}
+        {/* Background Image with Enhanced Parallax */}
         <div
           className="absolute inset-0"
           style={{
             backgroundImage:
-              'url(https://images.unsplash.com/photo-1519741497674-611481863552?w=1400&h=900&fit=crop)',
+              'url(https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=1400&h=900&fit=crop)',
             backgroundAttachment: 'fixed',
             backgroundRepeat: 'no-repeat',
             backgroundSize: 'cover',
@@ -167,24 +188,65 @@ export default function InvitePage() {
           }}
         />
 
-        {/* Dark Overlay */}
-        <div className="absolute inset-0 bg-black bg-opacity-45" />
+        {/* Multiple Overlay Layers for Depth */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-transparent to-black/20" />
+
+        {/* Floating Elements */}
+        <motion.div
+          animate={{
+            y: [0, -20, 0],
+            rotate: [0, 5, 0]
+          }}
+          transition={{
+            duration: 6,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+          className="absolute top-20 left-20 opacity-30"
+        >
+          <Heart size={60} className="text-white" />
+        </motion.div>
+
+        <motion.div
+          animate={{
+            y: [0, 20, 0],
+            rotate: [0, -5, 0]
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+          className="absolute bottom-32 right-20 opacity-20"
+        >
+          <Heart size={80} className="text-white" />
+        </motion.div>
 
         {/* Hero Content */}
-        <div className="relative z-10 text-center px-4">
+        <div className="relative z-10 text-center px-4 max-w-4xl">
           <motion.div
-            animate={{ scale: [1, 1.2, 1] }}
-            transition={{ duration: 2.5, repeat: Infinity }}
-            className="mb-6"
+            animate={{ scale: [1, 1.1, 1] }}
+            transition={{ duration: 3, repeat: Infinity }}
+            className="mb-8"
           >
-            <Heart size={80} className="text-rose-400 fill-rose-400 mx-auto" />
+            <Heart size={100} className="text-white fill-white mx-auto drop-shadow-2xl" />
           </motion.div>
+
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 1 }}
+            className="text-5xl md:text-7xl font-bold text-white mb-6 font-serif tracking-wider drop-shadow-2xl"
+          >
+            Afonso & Daniela
+          </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="text-xl md:text-3xl text-white font-serif italic mb-6"
+            transition={{ delay: 0.6, duration: 1 }}
+            className="text-xl md:text-2xl text-white/90 font-light mb-8 font-serif italic"
           >
             O nosso amor é a nossa maior aventura
           </motion.p>
@@ -192,10 +254,10 @@ export default function InvitePage() {
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="text-4xl md:text-5xl text-rose-400 font-bold"
+            transition={{ delay: 0.9, duration: 1 }}
+            className="text-3xl md:text-4xl text-white font-bold drop-shadow-lg"
           >
-            07/08/2026
+            07 • 08 • 2026
           </motion.p>
         </div>
       </motion.section>
@@ -208,88 +270,126 @@ export default function InvitePage() {
         viewport={{ once: true }}
         className="py-20 px-4 bg-gradient-to-b from-white to-gray-50"
       >
-        <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 font-serif">
-            Olá, <span className="text-rose-600">{guestName}</span>
-          </h2>
-          <p className="text-xl text-gray-700 font-serif">
-            Seja bem-vindo ao nosso grande dia!
-          </p>
+        <div className="max-w-3xl mx-auto">
+          <div className="bg-white border border-slate-200 rounded-3xl shadow-xl p-8 md:p-12 text-center">
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
+              className="mb-6"
+            >
+              <Heart size={48} className="text-slate-600 fill-slate-600 mx-auto" />
+            </motion.div>
+
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 font-serif">
+              Olá, <span className="text-rose-600">{guestName}</span>
+            </h2>
+            <p className="text-xl text-gray-700 font-serif mb-6">
+              Seja bem-vindo ao nosso grande dia!
+            </p>
+            <p className="text-slate-600 text-lg font-light">
+              É uma honra ter você connosco. Navegue por esta página para descobrir todos os detalhes do nosso grande dia.
+            </p>
+          </div>
         </div>
       </motion.section>
 
-      {/* COUNTDOWN SECTION */}
+      {/* COUNTDOWN SECTION - Elegant Inline */}
       <motion.section
+        id="contagem"
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
-        transition={{ duration: 0.8 }}
+        transition={{ duration: 1.2 }}
         viewport={{ once: true }}
-        className="py-20 px-4 bg-gradient-to-br from-rose-50 to-white"
+        className="py-24 px-4 bg-gradient-to-br from-slate-50 via-white to-slate-50 relative overflow-hidden"
       >
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 text-center mb-16 font-serif">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.1'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+          }} />
+        </div>
+
+        <div className="relative z-10 max-w-6xl mx-auto text-center">
+          <motion.h2
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="text-4xl md:text-6xl font-bold text-slate-800 mb-16 font-serif tracking-wide"
+          >
             Contagem Regressiva
-          </h2>
+          </motion.h2>
 
           {timeLeft.days === 0 && timeLeft.hours === 0 && timeLeft.minutes === 0 && timeLeft.seconds === 0 ? (
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
-              className="text-center"
+              className="text-center py-20"
             >
-              <h3 className="text-5xl md:text-6xl font-bold text-rose-600 font-serif mb-4">
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                className="mb-8"
+              >
+                <Heart size={120} className="text-slate-600 fill-slate-600 mx-auto drop-shadow-xl" />
+              </motion.div>
+              <h3 className="text-6xl md:text-8xl font-bold text-slate-800 font-serif mb-6 drop-shadow-lg">
                 Chegou o dia!
               </h3>
-              <Heart size={64} className="text-rose-500 fill-rose-500 mx-auto animate-pulse" />
+              <p className="text-2xl text-slate-600 font-light italic">
+                Prepare-se para celebrar o amor
+              </p>
             </motion.div>
           ) : (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
-              {[
-                { label: 'Dias', value: timeLeft.days || 0 },
-                { label: 'Horas', value: timeLeft.hours || 0 },
-                { label: 'Minutos', value: timeLeft.minutes || 0 },
-                { label: 'Segundos', value: timeLeft.seconds || 0 },
-              ].map((item, idx) => (
-                <motion.div
-                  key={idx}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: idx * 0.1 }}
-                  viewport={{ once: true }}
-                  className="bg-gradient-to-br from-rose-500 to-rose-600 rounded-2xl p-6 md:p-8 text-center shadow-xl hover:shadow-2xl transition-shadow"
-                >
-                  <p className="text-4xl md:text-5xl font-bold text-white mb-2">
-                    {String(item.value).padStart(2, '0')}
-                  </p>
-                  <p className="text-white text-lg font-serif uppercase tracking-wider">{item.label}</p>
-                </motion.div>
-              ))}
-            </div>
-          )}
-        </div>
-      </motion.section>
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 0.3 }}
+              viewport={{ once: true }}
+              className="text-center"
+            >
+              <div className="flex flex-wrap justify-center items-center gap-4 md:gap-8 mb-8">
+                {[
+                  { label: 'Dias', value: timeLeft.days || 0 },
+                  { label: 'Horas', value: timeLeft.hours || 0 },
+                  { label: 'Minutos', value: timeLeft.minutes || 0 },
+                  { label: 'Segundos', value: timeLeft.seconds || 0 },
+                ].map((item, idx) => (
+                  <motion.div
+                    key={idx}
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: idx * 0.1, duration: 0.6 }}
+                    viewport={{ once: true }}
+                    className="text-center"
+                  >
+                    <div className="text-5xl md:text-7xl font-bold text-slate-800 mb-2 font-mono">
+                      {String(item.value).padStart(2, '0')}
+                    </div>
+                    <div className="text-slate-600 text-sm md:text-lg font-light uppercase tracking-widest">
+                      {item.label}
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
 
-      {/* RSVP BUTTON SECTION */}
-      <motion.section
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        transition={{ duration: 0.8 }}
-        viewport={{ once: true }}
-        className="py-20 px-4 bg-gradient-to-r from-rose-50 to-white"
-      >
-        <div className="max-w-2xl mx-auto text-center">
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white font-bold py-4 px-12 rounded-full text-xl shadow-lg transition-all"
-          >
-            Confirmar Minha Presença
-          </motion.button>
+              <motion.p
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                transition={{ delay: 0.8, duration: 0.8 }}
+                viewport={{ once: true }}
+                className="text-xl md:text-2xl text-slate-600 font-light italic"
+              >
+                Até o grande dia do nosso casamento
+              </motion.p>
+            </motion.div>
+          )}
         </div>
       </motion.section>
 
       {/* AGENDA SECTION */}
       <motion.section
+        id="agenda"
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         transition={{ duration: 0.8 }}
@@ -297,77 +397,47 @@ export default function InvitePage() {
         className="py-20 px-4 bg-white"
       >
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 text-center mb-16 font-serif">
+          <h2 className="text-3xl md:text-4xl font-bold text-slate-800 text-center mb-16 font-serif">
             Agenda do Evento
           </h2>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            className="bg-gradient-to-br from-rose-50 to-white rounded-3xl shadow-2xl overflow-hidden border-4 border-rose-200 mb-12"
+            viewport={{ once: true }}
+            className="bg-gradient-to-br from-slate-50 to-white rounded-3xl shadow-2xl overflow-hidden border-4 border-slate-200 mb-12"
           >
-            <div className="bg-rose-600 py-8 text-center px-6">
-              <h3 className="font-serif text-3xl text-white font-bold mb-2">Afonso & Daniela</h3>
-              <p className="text-rose-200 font-serif text-lg uppercase tracking-widest">07 de Agosto de 2026</p>
+            <div className="bg-gradient-to-r from-slate-800 to-slate-900 py-12 text-center px-6">
+              <h3 className="font-serif text-4xl text-white font-bold mb-2">Afonso & Daniela</h3>
+              <p className="text-slate-300 font-serif text-xl uppercase tracking-widest">07 de Agosto de 2026</p>
             </div>
 
-            <div className="p-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-rose-50 p-6 rounded-2xl border-2 border-rose-200">
-                <div className="flex items-center gap-3 mb-2">
-                  <Heart className="text-rose-600" size={24} />
-                  <span className="font-bold text-rose-600">Data</span>
-                </div>
-                <p className="text-xl font-serif text-gray-800">Sábado, 07 de Agosto de 2026</p>
-              </div>
+            <div className="p-8">
+              <h4 className="text-2xl font-bold text-slate-800 mb-8 text-center font-serif">Cronograma</h4>
 
-              <div className="bg-rose-50 p-6 rounded-2xl border-2 border-rose-200">
-                <div className="flex items-center gap-3 mb-2">
-                  <MapPin className="text-rose-600" size={24} />
-                  <span className="font-bold text-rose-600">Localização</span>
-                </div>
-                <p className="text-lg font-serif text-gray-800 mb-4">Salão de Festas - Luanda, Angola</p>
-                <a
-                  href="https://www.google.com/maps/search/?api=1&query=Luanda+Angola"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 bg-rose-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-rose-700 transition-colors"
-                >
-                  <MapPin size={16} /> Abrir GPS
-                </a>
-              </div>
-            </div>
-          </motion.div>
+              <div className="relative border-l-4 border-slate-400 ml-4 space-y-12">
+                {[
+                  { time: "15:30", event: "Chegada dos Convidados" },
+                  { time: "16:00", event: "Início da Cerimónia" },
+                  { time: "17:30", event: "Sessão de Fotos e Cocktail" },
+                  { time: "19:00", event: "Jantar de Gala" },
+                  { time: "21:00", event: "Corte do Bolo" },
+                  { time: "22:00", event: "Início da Festa / DJ" }
+                ].map((item, idx) => (
+                  <div key={idx} className="relative ml-8">
+                    <div className="absolute -left-[44px] top-1 w-6 h-6 bg-slate-600 rounded-full border-4 border-white shadow-md" />
 
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-            className="bg-white rounded-3xl shadow-2xl p-8 border-4 border-rose-200"
-          >
-            <h3 className="font-serif text-2xl font-bold text-rose-600 mb-8 text-center">Cronograma</h3>
-
-            <div className="relative border-l-4 border-rose-400 ml-4 space-y-8">
-              {[
-                { time: "15:30", event: "Chegada dos Convidados" },
-                { time: "16:00", event: "Início da Cerimónia" },
-                { time: "17:30", event: "Sessão de Fotos e Cocktail" },
-                { time: "19:00", event: "Jantar de Gala" },
-                { time: "21:00", event: "Corte do Bolo" },
-                { time: "22:00", event: "Início da Festa / DJ" }
-              ].map((item, idx) => (
-                <div key={idx} className="relative ml-8">
-                  <div className="absolute -left-[44px] top-1 w-6 h-6 bg-rose-400 rounded-full border-4 border-white shadow-md" />
-
-                  <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-6">
-                    <span className="text-rose-600 font-bold text-xl font-serif min-w-[80px]">
-                      {item.time}
-                    </span>
-                    <div className="bg-rose-50 p-4 rounded-xl flex-1 shadow-sm border border-rose-200">
-                      <p className="text-gray-800 font-medium text-lg">{item.event}</p>
+                    <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-6">
+                      <span className="text-slate-700 font-bold text-xl font-serif min-w-[80px]">
+                        {item.time}
+                      </span>
+                      <div className="bg-slate-50 p-4 rounded-xl flex-1 shadow-sm border border-slate-200">
+                        <p className="text-slate-800 font-medium text-lg">{item.event}</p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </motion.div>
         </div>
@@ -375,6 +445,7 @@ export default function InvitePage() {
 
       {/* EXPERIÊNCIA GASTRONÓMICA SECTION */}
       <motion.section
+        id="gastronomia"
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         transition={{ duration: 0.8 }}
@@ -425,6 +496,7 @@ export default function InvitePage() {
 
       {/* NOSSA JORNADA SLIDESHOW */}
       <motion.section
+        id="jornada"
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         transition={{ duration: 0.8 }}
@@ -500,14 +572,15 @@ export default function InvitePage() {
 
       {/* CONSELHOS DA MADRINHA */}
       <motion.section
+        id="conselhos"
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         transition={{ duration: 0.8 }}
         viewport={{ once: true }}
-        className="py-20 px-4 bg-white"
+        className="py-20 px-4 bg-gradient-to-br from-slate-50 to-white"
       >
-        <div className="max-w-5xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 text-center mb-16 font-serif">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold text-slate-800 text-center mb-16 font-serif">
             Conselhos da Madrinha
           </h2>
 
@@ -515,24 +588,31 @@ export default function InvitePage() {
             {CONSELHOS.map((conselho, idx) => (
               <motion.div
                 key={idx}
-                initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
-                whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
-                transition={{ delay: idx * 0.1, type: 'spring', stiffness: 100 }}
+                initial={{ opacity: 0, y: 30, rotate: -2 }}
+                whileInView={{ opacity: 1, y: 0, rotate: 0 }}
+                transition={{ delay: idx * 0.15, type: 'spring', stiffness: 100 }}
                 viewport={{ once: true }}
                 whileHover={{
-                  scale: 1.05,
-                  rotate: 2,
-                  boxShadow: '0 20px 40px rgba(0,0,0,0.1)'
+                  scale: 1.03,
+                  rotate: 1,
+                  boxShadow: '0 25px 50px rgba(0,0,0,0.15)'
                 }}
-                className="bg-gradient-to-br from-rose-50 to-white rounded-2xl p-8 border-2 border-rose-200 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer"
+                className="bg-white rounded-2xl p-8 border border-slate-200 shadow-lg hover:shadow-2xl transition-all duration-500 group"
               >
-                <motion.div
-                  whileHover={{ scale: 1.1 }}
-                  className="text-4xl mb-4 text-center"
-                >
-                  💝
-                </motion.div>
-                <p className="text-gray-800 text-lg font-serif text-center leading-relaxed">{conselho}</p>
+                <div className="text-center mb-6">
+                  <motion.div
+                    whileHover={{ scale: 1.2, rotate: 10 }}
+                    className="w-16 h-16 bg-gradient-to-br from-slate-600 to-slate-800 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:from-slate-700 group-hover:to-slate-900 transition-all duration-300"
+                  >
+                    <span className="text-2xl text-white font-bold">{idx + 1}</span>
+                  </motion.div>
+                  <h3 className="text-xl font-bold text-slate-800 font-serif mb-3">
+                    {conselho.titulo}
+                  </h3>
+                </div>
+                <p className="text-slate-600 text-center leading-relaxed font-light">
+                  {conselho.descricao}
+                </p>
               </motion.div>
             ))}
           </div>
@@ -541,52 +621,54 @@ export default function InvitePage() {
 
       {/* MAPA SEÇÃO */}
       <motion.section
+        id="localizacao"
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         transition={{ duration: 0.8 }}
         viewport={{ once: true }}
-        className="py-20 px-4 bg-gradient-to-br from-rose-50 to-white"
+        className="py-20 px-4 bg-white"
       >
         <div className="max-w-6xl mx-auto">
-          <div className="bg-white rounded-3xl border-2 border-rose-200 shadow-2xl p-8">
-            <h2 className="text-3xl md:text-4xl font-bold text-rose-700 text-center mb-4 font-serif">
-              <MapPin className="inline-block mr-2 text-rose-600" size={32} />
-              Localização
-            </h2>
-            <p className="text-center text-rose-600 mb-6 text-lg font-medium">Salão de Festas - Luanda, Angola</p>
+          <h2 className="text-3xl md:text-4xl font-bold text-slate-800 text-center mb-12 font-serif">
+            <MapPin className="inline-block mr-2 text-slate-600" size={32} />
+            Localização
+          </h2>
 
-            <div className="grid gap-6 md:grid-cols-2">
-              <div className="rounded-2xl overflow-hidden border-2 border-rose-100 shadow-inner">
-                <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3944.8706265393223!2d13.234100600000002!3d-8.838611!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1a51fa0d66e1c1b7%3A0x9f0dbe0d0d0d0d0d!2sLuanda%2C%20Angola!5e0!3m2!1spt-PT!2spt!4v1234567890"
-                  width="100%"
-                  height="420"
-                  style={{ border: 0 }}
-                  allowFullScreen=""
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                />
-              </div>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="rounded-3xl overflow-hidden border-4 border-slate-200 shadow-2xl"
+          >
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3944.8706265393223!2d13.234100600000002!3d-8.838611!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1a51fa0d66e1c1b7%3A0x9f0dbe0d0d0d0d0d!2sLuanda%2C%20Angola!5e0!3m2!1spt-PT!2spt!4v1234567890"
+              width="100%"
+              height="500"
+              style={{ border: 0 }}
+              allowFullScreen=""
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
+          </motion.div>
 
-              <div className="p-6 bg-rose-50 rounded-2xl border-2 border-rose-200 flex flex-col justify-center">
-                <h3 className="text-2xl font-bold text-rose-700 mb-3">Detalhes do local</h3>
-                <ul className="list-disc list-inside space-y-2 text-rose-600">
-                  <li>Chegada: 15h30</li>
-                  <li>Cerimônia: 16h00</li>
-                  <li>Jantar: 19h00</li>
-                  <li>Festa com DJ: 22h00</li>
-                </ul>
-                <a
-                  href="https://www.google.com/maps/search/?api=1&query=Luanda+Angola"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-6 inline-block rounded-full bg-rose-600 text-white px-5 py-3 font-bold hover:bg-rose-700 transition-all text-center"
-                >
-                  Abrir no Google Maps
-                </a>
-              </div>
-            </div>
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mt-8"
+          >
+            <a
+              href="https://www.google.com/maps/search/?api=1&query=Luanda+Angola"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-3 bg-gradient-to-r from-slate-600 to-slate-800 text-white px-8 py-4 rounded-full font-bold hover:shadow-xl hover:scale-105 transition-all duration-300"
+            >
+              <MapPin size={20} />
+              Abrir no Google Maps
+            </a>
+          </motion.div>
         </div>
       </motion.section>
 
@@ -596,12 +678,81 @@ export default function InvitePage() {
         whileInView={{ opacity: 1 }}
         transition={{ duration: 0.8 }}
         viewport={{ once: true }}
-        className="py-12 px-4 bg-gradient-to-r from-gray-900 to-gray-800 text-white text-center"
+        className="py-16 px-4 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white relative overflow-hidden"
       >
-        <Heart size={32} className="text-rose-400 fill-rose-400 mx-auto mb-4" />
-        <p className="text-lg font-serif mb-2">Obrigado por fazer parte do nosso grande dia!</p>
-        <p className="text-sm text-gray-400">© 2026 - SynerTech | Todos os direitos reservados</p>
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M20 20c0-5.5-4.5-10-10-10s-10 4.5-10 10 4.5 10 10 10 10-4.5 10-10zm10 0c0-5.5-4.5-10-10-10s-10 4.5-10 10 4.5 10 10 10 10-4.5 10-10z'/%3E%3C/g%3E%3C/svg%3E")`,
+          }} />
+        </div>
+
+        <div className="relative z-10 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+            {/* Navigation Links */}
+            <div className="md:col-span-2">
+              <h3 className="text-2xl font-bold font-serif mb-6 text-white">Navegação</h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <h4 className="font-semibold text-slate-300 mb-3">Sobre o Evento</h4>
+                  <ul className="space-y-2 text-sm">
+                    <li><a href="#contagem" className="text-slate-400 hover:text-white transition-colors">Contagem Regressiva</a></li>
+                    <li><a href="#agenda" className="text-slate-400 hover:text-white transition-colors">Agenda</a></li>
+                    <li><a href="#gastronomia" className="text-slate-400 hover:text-white transition-colors">Gastronomia</a></li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-slate-300 mb-3">Nossa História</h4>
+                  <ul className="space-y-2 text-sm">
+                    <li><a href="#jornada" className="text-slate-400 hover:text-white transition-colors">Nossa Jornada</a></li>
+                    <li><a href="#conselhos" className="text-slate-400 hover:text-white transition-colors">Conselhos</a></li>
+                    <li><a href="#localizacao" className="text-slate-400 hover:text-white transition-colors">Localização</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            {/* Contact Info */}
+            <div>
+              <h3 className="text-2xl font-bold font-serif mb-6 text-white">Informações</h3>
+              <div className="space-y-3 text-sm text-slate-300">
+                <p><strong>Data:</strong><br />07 de Agosto de 2026</p>
+                <p><strong>Horário:</strong><br />15:30 - 02:00</p>
+                <p><strong>Local:</strong><br />Salão de Festas<br />Luanda, Angola</p>
+              </div>
+            </div>
+
+            {/* Social/Branding */}
+            <div>
+              <h3 className="text-2xl font-bold font-serif mb-6 text-white">Afonso & Daniela</h3>
+              <p className="text-slate-300 text-sm mb-4 leading-relaxed">
+                Celebrando o amor que nos une e a jornada que compartilhamos.
+                Este é o nosso grande dia.
+              </p>
+              <div className="flex items-center gap-2">
+                <Heart size={20} className="text-rose-400 fill-rose-400" />
+                <span className="text-rose-300 font-medium">Para Sempre</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Bar */}
+          <div className="border-t border-slate-700 pt-8 mt-8">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+              <p className="text-slate-400 text-sm">
+                © 2026 Afonso & Daniela - Experiência de Casamento Digital
+              </p>
+              <div className="flex items-center gap-6 text-sm text-slate-400">
+                <span>Criado com ❤️</span>
+                <span>•</span>
+                <span>Wedding Experience</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </motion.section>
+
+
     </div>
   );
 }
