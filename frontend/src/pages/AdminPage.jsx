@@ -117,26 +117,38 @@ const handleCreateGuest = async (e) => {
   const tipoParaBanco = formData.tipo === 'Pessoa Individual' ? 'individual' : 'casal';
 
   try {
+    // Gerar link de QR para a primeira página unificada (padrão único)
+    const qrUrl = `${FRONTEND_URL}/?qr=${novoSlug}`;
+
     const { data, error } = await supabase
       .from('convidados')
       .insert([
         { 
           nomeExibicao: formData.nomeExibicao, 
-          tipo: tipoParaBanco, // Enviando o valor aceito pelo ARRAY['individual', 'casal']
-          slug: novoSlug 
+          tipo: tipoParaBanco,
+          slug: novoSlug,
         }
       ])
       .select()
       .single();
 
+    if (!error && data) {
+      // Se a coluna 'qr_url' existir, atualizamos com o link completo.
+      await supabase
+        .from('convidados')
+        .update({ qr_url: qrUrl })
+        .eq('id', data.id);
+    }
+
     if (error) throw error;
 
     setMessage({ type: 'success', text: 'Convidado criado com sucesso!' });
     setLastCreatedSlug(data.slug);
-    
+    setSelectedQrSlug(data.slug);
+
     // Limpar formulário voltando ao estado inicial visual
     setFormData({ nomeExibicao: '', tipo: 'Pessoa Individual' });
-    
+
     // Atualizar interface
     if (currentView === 'lista') fetchConvidados();
     fetchStats();
@@ -427,7 +439,7 @@ const handleCreateGuest = async (e) => {
                       </h3>
                       <div className="bg-stone-50 p-4 rounded-lg mb-6 border border-gray-200">
                         <QRCode
-                          value={`${FRONTEND_URL}/convite/${lastCreatedSlug}`}
+                          value={`${FRONTEND_URL}/?qr=${lastCreatedSlug}`}
                           size={256}
                           level="H"
                           includeMargin={true}
@@ -437,7 +449,7 @@ const handleCreateGuest = async (e) => {
                         Slug: <code className="bg-gray-100 px-2 py-1 rounded font-mono">{lastCreatedSlug}</code>
                       </p>
                       <p className="text-xs text-gray-500 mb-6 break-all">
-                        {FRONTEND_URL}/convite/{lastCreatedSlug}
+                        {FRONTEND_URL}/?qr={lastCreatedSlug}
                       </p>
                       <button
                         onClick={() => {

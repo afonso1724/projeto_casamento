@@ -1,334 +1,607 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { supabase, isSupabaseConfigured, supabaseInitError } from '../supabaseClient';
-import { motion } from 'framer-motion';
-import { CheckCircle2, AlertCircle, ArrowRight, Heart } from 'lucide-react';
+import { supabase } from '../supabaseClient';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Heart, ChevronLeft, ChevronRight, MapPin } from 'lucide-react';
+
+const CONSELHOS = [
+  'Traga sapatos confortáveis',
+  'Prepare o coração',
+  'Não esqueça o sorriso',
+  'Chegue com antecedência',
+  'Divirta-se ao máximo',
+  'Capture momentos inesquecíveis',
+  'Celebre o amor acima de tudo',
+];
+
+const JOURNEY_CARDS = [
+  {
+    title: 'Nosso Primeiro Encontro',
+    images: [
+      'https://images.unsplash.com/photo-1519741497674-611481863552?w=600&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1465301046430-c52cc00e626d?w=600&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=600&h=400&fit=crop',
+    ]
+  },
+  {
+    title: 'O Pedido de Casamento',
+    images: [
+      'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=600&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?w=600&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1518621736915-f3b1c41bfd00?w=600&h=400&fit=crop',
+    ]
+  },
+  {
+    title: 'Preparativos do Grande Dia',
+    images: [
+      'https://images.unsplash.com/photo-1465495976277-4387d4b0e4a6?w=600&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=600&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1519741497674-611481863552?w=600&h=400&fit=crop',
+    ]
+  },
+  {
+    title: 'Momentos de Alegria',
+    images: [
+      'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=600&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1465301046430-c52cc00e626d?w=600&h=400&fit=crop',
+      'https://images.unsplash.com/photo-1519741497674-611481863552?w=600&h=400&fit=crop',
+    ]
+  },
+];
 
 export default function InvitePage() {
-  const { slug } = useParams();
+  const { slug: routeSlug } = useParams();
   const navigate = useNavigate();
   const [inviteData, setInviteData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [confirmingPresence, setConfirmingPresence] = useState(false);
-  const [confirmationMessage, setConfirmationMessage] = useState(null);
-
-  if (!isSupabaseConfigured) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-[#FAF9F6] to-[#F8E8E3] flex items-center justify-center p-4">
-        <div className="max-w-md bg-white p-8 rounded-2xl shadow-2xl border-4 border-[#E8D5CC] text-center">
-          <h2 className="text-2xl font-serif font-bold text-[#5C3D2E] mb-3">
-            Erro de configuração
-          </h2>
-          <p className="text-[#A8B4A8] mb-4">
-            {supabaseInitError ||
-              'Supabase não está configurado. Defina VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY no painel do Vercel.'}
-          </p>
-          <a
-            href="/"
-            className="inline-block bg-[#D4AF37] hover:bg-[#C9A961] text-white px-8 py-3 rounded-lg font-bold transition-all hover:scale-105"
-          >
-            ← Voltar ao Início
-          </a>
-        </div>
-      </div>
-    );
-  }
+  const [journeyIndices, setJourneyIndices] = useState([0, 0, 0, 0]);
+  const [timeLeft, setTimeLeft] = useState({});
 
   useEffect(() => {
     const fetchInviteData = async () => {
       try {
         setLoading(true);
-        const { data, error } = await supabase.from('convidados').select('*').eq('slug', slug).single();
+
+        const searchParams = new URLSearchParams(window.location.search);
+        const qrSlug = searchParams.get('qr') || searchParams.get('codigo') || routeSlug;
+
+        if (!qrSlug) {
+          setInviteData({ nomeExibicao: 'Convidado', tipo: 'Individual' });
+          setError(null);
+          return;
+        }
+
+        const { data, error } = await supabase
+          .from('convidados')
+          .select('*')
+          .eq('slug', qrSlug)
+          .single();
+
         if (error || !data) {
-          setError('Convite não encontrado. Verifique o código QR.');
-          setInviteData(null);
+          setError('Convite não encontrado');
+          setInviteData({ nomeExibicao: 'Convidado', tipo: 'Individual' });
         } else {
           setInviteData(data);
           setError(null);
         }
       } catch (err) {
-        setError('Convite não encontrado. Verifique o código QR.');
+        console.error(err);
+        setError('Erro ao carregar convite');
       } finally {
         setLoading(false);
       }
     };
-    if (slug) fetchInviteData();
-  }, [slug]);
 
-  const handleConfirmPresence = async () => {
-    setConfirmingPresence(true);
-    try {
-      // Usando o campo 'confirmado_presenca' conforme o seu banco
-      const { error } = await supabase.from('convidados').update({ confirmado_presenca: true }).eq('slug', slug);
-      if (error) throw error;
-      
-      setInviteData({ ...inviteData, confirmado_presenca: true });
-      setConfirmationMessage({
-        type: 'success',
-        text: '✓ Presença confirmada com sucesso!',
-      });
-      setTimeout(() => setConfirmationMessage(null), 4000);
-    } catch (err) {
-      setConfirmationMessage({
-        type: 'error',
-        text: '✗ Erro ao confirmar presença',
-      });
-      setTimeout(() => setConfirmationMessage(null), 4000);
-    } finally {
-      setConfirmingPresence(false);
-    }
-  };
+    fetchInviteData();
+  }, [routeSlug]);
+
+  // Countdown
+  useEffect(() => {
+    const updateCountdown = () => {
+      const weddingDate = new Date('2026-08-07T00:00:00').getTime();
+      const now = new Date().getTime();
+      const distance = weddingDate - now;
+
+      if (distance > 0) {
+        setTimeLeft({
+          days: Math.floor(distance / (1000 * 60 * 60 * 24)),
+          hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+          minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+          seconds: Math.floor((distance % (1000 * 60)) / 1000),
+        });
+      } else {
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+      }
+    };
+
+    updateCountdown();
+    const timer = setInterval(updateCountdown, 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#FAF9F6] to-[#F8E8E3] flex items-center justify-center p-4">
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <motion.div animate={{ rotate: 360 }} transition={{ duration: 2, repeat: Infinity }}>
+          <Heart size={48} className="text-rose-600 fill-rose-600" />
+        </motion.div>
+      </div>
+    );
+  }
+
+  if (error || !inviteData) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
         <div className="text-center">
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
-            className="inline-block mb-4"
-          >
-            <Heart size={48} className="text-[#6B2C3E]" />
-          </motion.div>
-          <p className="text-[#5C3D2E] font-serif text-lg">
-            Carregando seu convite...
-          </p>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">{error || 'Convite não encontrado'}</h2>
+          <a href="/" className="text-yellow-600 hover:text-yellow-700">
+            ← Voltar para Home
+          </a>
         </div>
       </div>
     );
   }
 
-  if (error) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-[#FAF9F6] to-[#F8E8E3] flex items-center justify-center p-4">
-        <motion.div
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          className="text-center max-w-md bg-white p-8 md:p-12 rounded-2xl shadow-2xl border-4 border-[#E8D5CC]"
-        >
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 0.5 }}
-            className="mb-6"
-          >
-            <AlertCircle size={64} className="text-red-500 mx-auto" />
-          </motion.div>
-          <h2 className="text-3xl font-serif font-bold text-[#5C3D2E] mb-3">
-            Convite não encontrado
-          </h2>
-          <p className="text-[#A8B4A8] mb-6 text-lg">{error}</p>
-          <p className="text-sm text-[#9DB4A8] mb-8">
-            Verifique o código QR no seu convite impresso
-          </p>
-          <a
-            href="/"
-            className="inline-block bg-[#D4AF37] hover:bg-[#C9A961] text-white px-8 py-3 rounded-lg font-bold transition-all hover:scale-105"
-          >
-            ← Voltar ao Início
-          </a>
-        </motion.div>
-      </div>
-    );
-  }
-
-  if (!inviteData) return null;
-
-  // --- ALTERAÇÕES DE SEGURANÇA AQUI ---
-  const name1 = inviteData?.coupleNames?.name1 || "Noivos";
-  const name2 = inviteData?.coupleNames?.name2;
-  const coupleNames = name2 ? `${name1} & ${name2}` : name1;
-  
-  const getWelcomeMessage = () => {
-    const nome = inviteData?.nomeExibicao || "Convidado";
-    return inviteData?.tipo === 'Casal' ? `Caro casal ${nome}` : `Caro ${nome}`;
-  };
-
-  // Verificando se já está confirmado (usando o campo do banco)
-  const isAlreadyConfirmed = inviteData?.confirmado_presenca === true;
-  // ------------------------------------
+  const guestName = inviteData?.nomeExibicao || 'Convidado';
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#FAF9F6] via-[#F8E8E3] to-[#E8D5CC] py-12 md:py-16 px-4">
-      <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
-        <motion.div
-          className="absolute top-10 right-10 w-96 h-96 bg-[#D4AF37] rounded-full opacity-5 blur-3xl"
-          animate={{ y: [0, 30, 0], x: [0, -30, 0] }}
-          transition={{ duration: 8, repeat: Infinity }}
+    <div className="bg-white overflow-hidden">
+      {/* HERO SECTION (Parallax) */}
+      <motion.section
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="relative h-screen flex items-center justify-center overflow-hidden"
+      >
+        {/* Background Image */}
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage:
+              'url(https://images.unsplash.com/photo-1519741497674-611481863552?w=1400&h=900&fit=crop)',
+            backgroundAttachment: 'fixed',
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            transform: 'translateZ(0)',
+          }}
         />
-        <motion.div
-          className="absolute bottom-20 left-10 w-96 h-96 bg-[#6B2C3E] rounded-full opacity-5 blur-3xl"
-          animate={{ y: [0, -30, 0], x: [0, 30, 0] }}
-          transition={{ duration: 10, repeat: Infinity, delay: 1 }}
-        />
-      </div>
 
-      <div className="max-w-2xl mx-auto">
-        {confirmationMessage && (
+        {/* Dark Overlay */}
+        <div className="absolute inset-0 bg-black bg-opacity-45" />
+
+        {/* Hero Content */}
+        <div className="relative z-10 text-center px-4">
           <motion.div
-            initial={{ y: -20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -20, opacity: 0 }}
-            className={`mb-6 p-4 rounded-lg font-bold text-center ${
-              confirmationMessage.type === 'success'
-                ? 'bg-green-100 text-green-800 border-2 border-green-300'
-                : 'bg-red-100 text-red-800 border-2 border-red-300'
-            }`}
+            animate={{ scale: [1, 1.2, 1] }}
+            transition={{ duration: 2.5, repeat: Infinity }}
+            className="mb-6"
           >
-            {confirmationMessage.text}
+            <Heart size={80} className="text-rose-400 fill-rose-400 mx-auto" />
           </motion.div>
-        )}
 
-        <motion.div
-          initial={{ opacity: 0, y: 20, scale: 0.95 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.8 }}
-          className="relative bg-white rounded-3xl shadow-2xl overflow-hidden border-4 border-[#E8D5CC]"
-        >
-          <div className="bg-gradient-to-r from-[#6B2C3E] via-[#9DB4A8] to-[#D4AF37] h-56 md:h-72 relative overflow-hidden">
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="text-xl md:text-3xl text-white font-serif italic mb-6"
+          >
+            O nosso amor é a nossa maior aventura
+          </motion.p>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            className="text-4xl md:text-5xl text-rose-400 font-bold"
+          >
+            07/08/2026
+          </motion.p>
+        </div>
+      </motion.section>
+
+      {/* BOAS-VINDAS SECTION */}
+      <motion.section
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ duration: 0.8 }}
+        viewport={{ once: true }}
+        className="py-20 px-4 bg-gradient-to-b from-white to-gray-50"
+      >
+        <div className="max-w-3xl mx-auto text-center">
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 font-serif">
+            Olá, <span className="text-rose-600">{guestName}</span>
+          </h2>
+          <p className="text-xl text-gray-700 font-serif">
+            Seja bem-vindo ao nosso grande dia!
+          </p>
+        </div>
+      </motion.section>
+
+      {/* COUNTDOWN SECTION */}
+      <motion.section
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ duration: 0.8 }}
+        viewport={{ once: true }}
+        className="py-20 px-4 bg-gradient-to-br from-rose-50 to-white"
+      >
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 text-center mb-16 font-serif">
+            Contagem Regressiva
+          </h2>
+
+          {timeLeft.days === 0 && timeLeft.hours === 0 && timeLeft.minutes === 0 && timeLeft.seconds === 0 ? (
             <motion.div
-              animate={{ rotate: 360 }}
-              transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}
-              className="absolute -right-24 -top-24 w-48 h-48 border-2 border-[#D4AF37] rounded-full opacity-20"
-            />
-            <motion.div
-              animate={{ rotate: -360 }}
-              transition={{ duration: 40, repeat: Infinity, ease: 'linear' }}
-              className="absolute -left-32 -bottom-32 w-64 h-64 border-2 border-white rounded-full opacity-10"
-            />
-            <motion.div
-              animate={{ scale: [1, 1.15, 1] }}
-              transition={{ duration: 2.5, repeat: Infinity }}
-              className="absolute top-6 md:top-8 left-1/2 transform -translate-x-1/2"
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              className="text-center"
             >
-              <Heart size={56} className="text-[#D4AF37] fill-[#D4AF37]" />
+              <h3 className="text-5xl md:text-6xl font-bold text-rose-600 font-serif mb-4">
+                Chegou o dia!
+              </h3>
+              <Heart size={64} className="text-rose-500 fill-rose-500 mx-auto animate-pulse" />
             </motion.div>
-          </div>
-
-          <div className="px-6 md:px-16 py-12 md:py-16 text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="mb-8"
-            >
-              <p className="font-serif text-[#6B2C3E] text-sm md:text-base uppercase tracking-widest mb-3">
-                Somos Honrados em Convidá-lo
-              </p>
-              <h1 className="font-serif text-5xl md:text-7xl font-bold text-[#5C3D2E] leading-tight mb-4">
-                {getWelcomeMessage()}
-              </h1>
-              <p className="font-serif text-lg md:text-2xl text-[#6B2C3E] italic">
-                para celebrar o amor que une nossas vidas
-              </p>
-            </motion.div>
-
-            <motion.div
-              initial={{ scaleX: 0 }}
-              animate={{ scaleX: 1 }}
-              transition={{ delay: 0.3, duration: 0.8 }}
-              className="w-32 h-1 bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent mx-auto mb-8 md:mb-12"
-            />
-
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.4 }}
-              className="mb-12 md:mb-16"
-            >
-              <p className="font-serif text-[#A8B4A8] text-sm md:text-base uppercase tracking-widest mb-2">
-                O Casal
-              </p>
-              <p className="font-serif text-3xl md:text-4xl font-bold text-[#5C3D2E]">
-                {coupleNames}
-              </p>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-              className="bg-gradient-to-br from-[#FAF9F6] to-[#F8E8E3] p-6 md:p-8 rounded-2xl border-2 border-[#E8D5CC] mb-8 md:mb-12"
-            >
-              <p className="text-sm text-[#9DB4A8] uppercase tracking-wider mb-2 font-serif">
-                Seu Convite
-              </p>
-              <p className="text-2xl md:text-3xl font-serif font-bold text-[#5C3D2E] mb-2">
-                {inviteData?.nomeExibicao}
-              </p>
-              <p className="text-[#A8B4A8] font-serif">
-                Tipo: {inviteData?.tipo} • Código: {slug}
-              </p>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.6 }}
-              className="space-y-4 mb-8"
-            >
-              {!isAlreadyConfirmed ? (
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={handleConfirmPresence}
-                  disabled={confirmingPresence}
-                  className="w-full bg-gradient-to-r from-[#6B2C3E] to-[#9DB4A8] hover:from-[#5C3D2E] hover:to-[#8AA8A0] text-white font-bold py-4 px-8 rounded-2xl text-lg transition-all hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
+              {[
+                { label: 'Dias', value: timeLeft.days || 0 },
+                { label: 'Horas', value: timeLeft.hours || 0 },
+                { label: 'Minutos', value: timeLeft.minutes || 0 },
+                { label: 'Segundos', value: timeLeft.seconds || 0 },
+              ].map((item, idx) => (
+                <motion.div
+                  key={idx}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: idx * 0.1 }}
+                  viewport={{ once: true }}
+                  className="bg-gradient-to-br from-rose-500 to-rose-600 rounded-2xl p-6 md:p-8 text-center shadow-xl hover:shadow-2xl transition-shadow"
                 >
-                  <CheckCircle2 size={24} />
-                  {confirmingPresence ? 'Confirmando...' : 'Confirmar Presença'}
-                </motion.button>
-              ) : (
-                <div className="w-full bg-gradient-to-r from-green-400 to-green-500 text-white font-bold py-4 px-8 rounded-2xl text-lg flex items-center justify-center gap-2 shadow-lg">
-                  <CheckCircle2 size={24} />
-                  Presença Confirmada
+                  <p className="text-4xl md:text-5xl font-bold text-white mb-2">
+                    {String(item.value).padStart(2, '0')}
+                  </p>
+                  <p className="text-white text-lg font-serif uppercase tracking-wider">{item.label}</p>
+                </motion.div>
+              ))}
+            </div>
+          )}
+        </div>
+      </motion.section>
+
+      {/* RSVP BUTTON SECTION */}
+      <motion.section
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ duration: 0.8 }}
+        viewport={{ once: true }}
+        className="py-20 px-4 bg-gradient-to-r from-rose-50 to-white"
+      >
+        <div className="max-w-2xl mx-auto text-center">
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white font-bold py-4 px-12 rounded-full text-xl shadow-lg transition-all"
+          >
+            Confirmar Minha Presença
+          </motion.button>
+        </div>
+      </motion.section>
+
+      {/* AGENDA SECTION */}
+      <motion.section
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ duration: 0.8 }}
+        viewport={{ once: true }}
+        className="py-20 px-4 bg-white"
+      >
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 text-center mb-16 font-serif">
+            Agenda do Evento
+          </h2>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            className="bg-gradient-to-br from-rose-50 to-white rounded-3xl shadow-2xl overflow-hidden border-4 border-rose-200 mb-12"
+          >
+            <div className="bg-rose-600 py-8 text-center px-6">
+              <h3 className="font-serif text-3xl text-white font-bold mb-2">Afonso & Daniela</h3>
+              <p className="text-rose-200 font-serif text-lg uppercase tracking-widest">07 de Agosto de 2026</p>
+            </div>
+
+            <div className="p-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="bg-rose-50 p-6 rounded-2xl border-2 border-rose-200">
+                <div className="flex items-center gap-3 mb-2">
+                  <Heart className="text-rose-600" size={24} />
+                  <span className="font-bold text-rose-600">Data</span>
                 </div>
-              )}
+                <p className="text-xl font-serif text-gray-800">Sábado, 07 de Agosto de 2026</p>
+              </div>
 
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => navigate(`/agenda/${slug}`)}
-                className="w-full bg-gradient-to-r from-[#D4AF37] to-[#C9A961] hover:from-[#C9A961] hover:to-[#B89A2F] text-white font-bold py-4 px-8 rounded-2xl text-lg transition-all hover:shadow-xl flex items-center justify-center gap-2"
-              >
-                Ver Agenda do Evento
-                <ArrowRight size={20} />
-              </motion.button>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.7 }}
-              className={`p-4 md:p-5 rounded-xl font-bold text-center border-2 ${
-                isAlreadyConfirmed
-                  ? 'bg-green-50 text-green-800 border-green-300'
-                  : 'bg-orange-50 text-orange-800 border-orange-300'
-              }`}
-            >
-              <span className="flex items-center justify-center gap-2 font-serif">
-                {isAlreadyConfirmed ? <CheckCircle2 size={20} /> : <AlertCircle size={20} />}
-                {isAlreadyConfirmed ? 'Sua presença está confirmada' : 'Por favor, confirme sua presença'}
-              </span>
-            </motion.div>
-          </div>
+              <div className="bg-rose-50 p-6 rounded-2xl border-2 border-rose-200">
+                <div className="flex items-center gap-3 mb-2">
+                  <MapPin className="text-rose-600" size={24} />
+                  <span className="font-bold text-rose-600">Localização</span>
+                </div>
+                <p className="text-lg font-serif text-gray-800 mb-4">Salão de Festas - Luanda, Angola</p>
+                <a
+                  href="https://www.google.com/maps/search/?api=1&query=Luanda+Angola"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 bg-rose-600 text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-rose-700 transition-colors"
+                >
+                  <MapPin size={16} /> Abrir GPS
+                </a>
+              </div>
+            </div>
+          </motion.div>
 
           <motion.div
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.8 }}
-            className="bg-gradient-to-r from-[#6B2C3E] to-[#5C3D2E] px-6 md:px-16 py-6 text-center border-t-4 border-[#D4AF37]"
+            whileInView={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            className="bg-white rounded-3xl shadow-2xl p-8 border-4 border-rose-200"
           >
-            <p className="text-[#E8D5CC] font-serif text-sm md:text-base">
-              "O amor é a maior celebração da vida. Que este momento seja especial para todos nós."
-            </p>
-            <p className="text-[#9DB4A8] text-xs mt-3">
-              Sistema de Experiência de entrada de casamento - SynerTech &copy; 2026
-            </p>
+            <h3 className="font-serif text-2xl font-bold text-rose-600 mb-8 text-center">Cronograma</h3>
+
+            <div className="relative border-l-4 border-rose-400 ml-4 space-y-8">
+              {[
+                { time: "15:30", event: "Chegada dos Convidados" },
+                { time: "16:00", event: "Início da Cerimónia" },
+                { time: "17:30", event: "Sessão de Fotos e Cocktail" },
+                { time: "19:00", event: "Jantar de Gala" },
+                { time: "21:00", event: "Corte do Bolo" },
+                { time: "22:00", event: "Início da Festa / DJ" }
+              ].map((item, idx) => (
+                <div key={idx} className="relative ml-8">
+                  <div className="absolute -left-[44px] top-1 w-6 h-6 bg-rose-400 rounded-full border-4 border-white shadow-md" />
+
+                  <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-6">
+                    <span className="text-rose-600 font-bold text-xl font-serif min-w-[80px]">
+                      {item.time}
+                    </span>
+                    <div className="bg-rose-50 p-4 rounded-xl flex-1 shadow-sm border border-rose-200">
+                      <p className="text-gray-800 font-medium text-lg">{item.event}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </motion.div>
-        </motion.div>
-      </div>
+        </div>
+      </motion.section>
+
+      {/* EXPERIÊNCIA GASTRONÓMICA SECTION */}
+      <motion.section
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ duration: 0.8 }}
+        viewport={{ once: true }}
+        className="py-20 px-4 bg-gradient-to-br from-gray-50 to-white"
+      >
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 text-center mb-16 font-serif">
+            Experiência Gastronómica
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {[
+              { title: 'Bebidas', icon: '🍷', items: ['Vinhos Finos', 'Champanhe', 'Cocktails Especiais', 'Água com Gás'] },
+              { title: 'Pratos', icon: '🍽️', items: ['Grelhados Mistos', 'Peixe Fresco', 'Saladas Frescas', 'Massas Artesanais'] },
+              { title: 'Doces', icon: '🍰', items: ['Doces Tradicionais', 'Bolo de Casamento', 'Petit Fours', 'Frutas Tropicais'] },
+              { title: 'Petiscos', icon: '🥂', items: ['Aperitivos Gourmet', 'Queijos e Frios', 'Canapés', 'Tapas Variadas'] },
+            ].map((card, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: idx * 0.15 }}
+                viewport={{ once: true }}
+                whileHover={{ scale: 1.05, y: -5 }}
+                className="bg-white rounded-2xl p-8 border-2 border-rose-200 shadow-lg hover:shadow-2xl transition-all duration-300"
+              >
+                <div className="text-4xl mb-4 text-center">{card.icon}</div>
+                <h3 className="text-2xl font-bold text-rose-600 mb-6 font-serif text-center">{card.title}</h3>
+                <ul className="space-y-3">
+                  {card.items.map((item, i) => (
+                    <motion.li
+                      key={i}
+                      initial={{ opacity: 0, x: -20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      transition={{ delay: (idx * 0.15) + (i * 0.1) }}
+                      className="text-gray-700 flex items-center gap-2"
+                    >
+                      <span className="text-rose-400">•</span> {item}
+                    </motion.li>
+                  ))}
+                </ul>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </motion.section>
+
+      {/* NOSSA JORNADA SLIDESHOW */}
+      <motion.section
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ duration: 0.8 }}
+        viewport={{ once: true }}
+        className="py-20 px-4 bg-gradient-to-br from-rose-50 to-white"
+      >
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 text-center mb-16 font-serif">
+            Nossa Jornada
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {JOURNEY_CARDS.map((card, cardIdx) => (
+              <motion.div
+                key={cardIdx}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: cardIdx * 0.2 }}
+                viewport={{ once: true }}
+                className="bg-white rounded-2xl shadow-xl overflow-hidden border-2 border-rose-200"
+              >
+                <div className="relative h-64 overflow-hidden">
+                  <AnimatePresence mode="wait">
+                    <motion.img
+                      key={journeyIndices[cardIdx]}
+                      src={card.images[journeyIndices[cardIdx]]}
+                      alt={card.title}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.5 }}
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                  </AnimatePresence>
+
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+
+                  <button
+                    onClick={() => setJourneyIndices(prev => prev.map((idx, i) => i === cardIdx ? (idx - 1 + card.images.length) % card.images.length : idx))}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 shadow-lg z-10 transition-all"
+                  >
+                    <ChevronLeft size={20} className="text-gray-800" />
+                  </button>
+
+                  <button
+                    onClick={() => setJourneyIndices(prev => prev.map((idx, i) => i === cardIdx ? (idx + 1) % card.images.length : idx))}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 shadow-lg z-10 transition-all"
+                  >
+                    <ChevronRight size={20} className="text-gray-800" />
+                  </button>
+
+                  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+                    {card.images.map((_, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => setJourneyIndices(prev => prev.map((i, cardI) => cardI === cardIdx ? idx : i))}
+                        className={`w-2 h-2 rounded-full transition-all ${
+                          idx === journeyIndices[cardIdx] ? 'bg-rose-400 w-6' : 'bg-white/50'
+                        }`}
+                      />
+                    ))}
+                  </div>
+                </div>
+
+                <div className="p-6">
+                  <h3 className="text-xl font-bold text-rose-600 font-serif text-center">{card.title}</h3>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </motion.section>
+
+      {/* CONSELHOS DA MADRINHA */}
+      <motion.section
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ duration: 0.8 }}
+        viewport={{ once: true }}
+        className="py-20 px-4 bg-white"
+      >
+        <div className="max-w-5xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 text-center mb-16 font-serif">
+            Conselhos da Madrinha
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {CONSELHOS.map((conselho, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
+                whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
+                transition={{ delay: idx * 0.1, type: 'spring', stiffness: 100 }}
+                viewport={{ once: true }}
+                whileHover={{
+                  scale: 1.05,
+                  rotate: 2,
+                  boxShadow: '0 20px 40px rgba(0,0,0,0.1)'
+                }}
+                className="bg-gradient-to-br from-rose-50 to-white rounded-2xl p-8 border-2 border-rose-200 shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer"
+              >
+                <motion.div
+                  whileHover={{ scale: 1.1 }}
+                  className="text-4xl mb-4 text-center"
+                >
+                  💝
+                </motion.div>
+                <p className="text-gray-800 text-lg font-serif text-center leading-relaxed">{conselho}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </motion.section>
+
+      {/* MAPA SEÇÃO */}
+      <motion.section
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ duration: 0.8 }}
+        viewport={{ once: true }}
+        className="py-20 px-4 bg-gradient-to-br from-rose-50 to-white"
+      >
+        <div className="max-w-6xl mx-auto">
+          <div className="bg-white rounded-3xl border-2 border-rose-200 shadow-2xl p-8">
+            <h2 className="text-3xl md:text-4xl font-bold text-rose-700 text-center mb-4 font-serif">
+              <MapPin className="inline-block mr-2 text-rose-600" size={32} />
+              Localização
+            </h2>
+            <p className="text-center text-rose-600 mb-6 text-lg font-medium">Salão de Festas - Luanda, Angola</p>
+
+            <div className="grid gap-6 md:grid-cols-2">
+              <div className="rounded-2xl overflow-hidden border-2 border-rose-100 shadow-inner">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3944.8706265393223!2d13.234100600000002!3d-8.838611!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1a51fa0d66e1c1b7%3A0x9f0dbe0d0d0d0d0d!2sLuanda%2C%20Angola!5e0!3m2!1spt-PT!2spt!4v1234567890"
+                  width="100%"
+                  height="420"
+                  style={{ border: 0 }}
+                  allowFullScreen=""
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
+              </div>
+
+              <div className="p-6 bg-rose-50 rounded-2xl border-2 border-rose-200 flex flex-col justify-center">
+                <h3 className="text-2xl font-bold text-rose-700 mb-3">Detalhes do local</h3>
+                <ul className="list-disc list-inside space-y-2 text-rose-600">
+                  <li>Chegada: 15h30</li>
+                  <li>Cerimônia: 16h00</li>
+                  <li>Jantar: 19h00</li>
+                  <li>Festa com DJ: 22h00</li>
+                </ul>
+                <a
+                  href="https://www.google.com/maps/search/?api=1&query=Luanda+Angola"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-6 inline-block rounded-full bg-rose-600 text-white px-5 py-3 font-bold hover:bg-rose-700 transition-all text-center"
+                >
+                  Abrir no Google Maps
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </motion.section>
+
+      {/* FOOTER */}
+      <motion.section
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ duration: 0.8 }}
+        viewport={{ once: true }}
+        className="py-12 px-4 bg-gradient-to-r from-gray-900 to-gray-800 text-white text-center"
+      >
+        <Heart size={32} className="text-rose-400 fill-rose-400 mx-auto mb-4" />
+        <p className="text-lg font-serif mb-2">Obrigado por fazer parte do nosso grande dia!</p>
+        <p className="text-sm text-gray-400">© 2026 - Wedding Experience</p>
+      </motion.section>
     </div>
   );
 }

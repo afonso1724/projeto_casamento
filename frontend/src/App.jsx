@@ -1,25 +1,24 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { Settings } from 'lucide-react';
 import InvitePage from './pages/InvitePage';
-import AgendaPage from './pages/AgendaPage';
 import AdminPage from './pages/AdminPage';
+import LoginPage from './pages/LoginPage';
+import ProtectedRoute from './components/ProtectedRoute';
 import './index.css';
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/admin" element={<AdminPage />} />
-        <Route path="/convite/:slug" element={<InvitePage />} />
-        <Route path="/agenda/:slug" element={<AgendaPage />} />
-        <Route path="*" element={<NotFoundPage />} />
+        <Route path="/" element={<InvitePage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/admin" element={<ProtectedRoute><AdminPage /></ProtectedRoute>} />
       </Routes>
     </Router>
   );
 }
 
+// HomePage não é mais usada, mantém estrutura mas pode ser removida em limpeza futura.
 function HomePage() {
   return (
     <div className="min-h-screen bg-stone-50 flex items-center justify-center">
