@@ -582,7 +582,7 @@ export default function InvitePage() {
             className="mt-16 relative rounded-2xl overflow-hidden shadow-2xl"
           >
             <img
-              src="https://images.unsplash.com/photo-1519741497674-611481863552?w=800&h=400&fit=crop"
+              src="https://github.com/afonso1724/projeto_casamento/blob/main/frontend/src/img/zolanakela.jpeg?raw=true"
               alt="Momento especial"
               className="w-full h-64 object-cover"
             />
@@ -722,12 +722,30 @@ export default function InvitePage() {
         whileInView={{ opacity: 1 }}
         transition={{ duration: 0.8 }}
         viewport={{ once: true }}
-        className="py-16 px-4 bg-gradient-to-br from-[#D4AF37] via-slate-800 to-slate-900 text-white relative overflow-hidden"
+        className="py-16 px-4 text-white relative overflow-hidden"
       >
+        {/* Background Image */}
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage:
+              'url(https://github.com/afonso1724/projeto_casamento/blob/main/frontend/src/img/zolanakela.jpeg?raw=true)',
+            backgroundAttachment: 'fixed',
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            transform: 'translateZ(0)',
+          }}
+        />
+
+        {/* Overlay Layers for Depth */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-transparent to-black/20" />
+
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute inset-0" style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M20 20c0-5.5-4.5-10-10-10s-10 4.5-10 10 4.5 10 10 10 10-4.5 10-10zm10 0c0-5.5-4.5-10-10-10s-10 4.5-10 10 4.5 10 10 10 10-4.5 10-10z'/%3E%3C/g%3E%3C/svg%3E")`,
+            backgroundImage: `url((https://github.com/afonso1724/projeto_casamento/blob/main/frontend/src/img/zolanakela.jpeg?raw=true))`,
           }} />
         </div>
 
@@ -737,7 +755,7 @@ export default function InvitePage() {
             Celebrando o amor que nos une e a jornada que compartilhamos. Este é o nosso grande dia.
           </p>
           <div className="flex items-center justify-center gap-2 mb-8">
-            <Heart size={20} className="text-[#D4AF37] fill-[#D4AF37]" />
+            <Heart size={20} className="text-white fill-white" />
             <span className="text-slate-300 font-medium">Para Sempre</span>
           </div>
           <p className="text-slate-400 text-sm">
