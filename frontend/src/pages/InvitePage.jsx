@@ -37,7 +37,6 @@ const CONSELHOS = [
 
 const JOURNEY_CARDS = [
   {
-    title: 'Nosso Primeiro Encontro',
     images: [
       'https://images.unsplash.com/photo-1519741497674-611481863552?w=600&h=400&fit=crop',
       'https://images.unsplash.com/photo-1465301046430-c52cc00e626d?w=600&h=400&fit=crop',
@@ -45,7 +44,6 @@ const JOURNEY_CARDS = [
     ]
   },
   {
-    title: 'O Pedido de Casamento',
     images: [
       'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=600&h=400&fit=crop',
       'https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?w=600&h=400&fit=crop',
@@ -53,7 +51,6 @@ const JOURNEY_CARDS = [
     ]
   },
   {
-    title: 'Preparativos do Grande Dia',
     images: [
       'https://images.unsplash.com/photo-1465495976277-4387d4b0e4a6?w=600&h=400&fit=crop',
       'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=600&h=400&fit=crop',
@@ -61,7 +58,6 @@ const JOURNEY_CARDS = [
     ]
   },
   {
-    title: 'Momentos de Alegria',
     images: [
       'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=600&h=400&fit=crop',
       'https://images.unsplash.com/photo-1465301046430-c52cc00e626d?w=600&h=400&fit=crop',
@@ -240,7 +236,7 @@ export default function InvitePage() {
             transition={{ delay: 0.3, duration: 1 }}
             className="text-5xl md:text-7xl font-bold text-white mb-6 font-serif tracking-wider drop-shadow-2xl"
           >
-            Afonso & Daniela
+            Zola & Regina
           </motion.h1>
 
           <motion.p
@@ -278,7 +274,7 @@ export default function InvitePage() {
               transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
               className="mb-6"
             >
-              <Heart size={48} className="text-slate-600 fill-slate-600 mx-auto" />
+              <Heart size={48} className="text-rose-400 fill-rose-400 mx-auto" />
             </motion.div>
 
             <h2 className="text-4xl md:text-5xl font-bold text-[#ec4899] mb-4 font-serif">
@@ -387,7 +383,7 @@ export default function InvitePage() {
               </motion.p>
 
               <motion.a
-                href={`https://wa.me/244935678380?text=Olá! Confirmo minha presença no casamento de Afonso e Daniela. Meu nome é ${guestName}.`}
+                href={`https://wa.me/244935678380?text=Olá! Confirmo minha presença no casamento de Zola e Regina. Meu nome é ${guestName}.`}
                 target="_blank"
                 rel="noopener noreferrer"
                 initial={{ opacity: 0, y: 20 }}
@@ -608,14 +604,15 @@ export default function InvitePage() {
             <h3 className="text-2xl font-bold text-slate-800 text-center mb-8 font-serif">
               Manual do Convidado
             </h3>
-            <div className="relative overflow-hidden rounded-2xl shadow-2xl">
+            <div className="relative overflow-hidden rounded-2xl shadow-2xl bg-gradient-to-br from-slate-50 to-white">
               <div className="flex transition-transform duration-500 ease-in-out" style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
                 {[
-                  'frontend/src/img/capa.jpeg', // Capa
-                  '../frontend/img/pagina1.jpg', // Página 1
-                  '../frontend/img/pagina2.jpg'  // Página 2
+                  'https://github.com/afonso1724/projeto_casamento/blob/main/frontend/src/img/capa.jpeg?raw=true', 
+                  // Capa
+                  'https://github.com/afonso1724/projeto_casamento/blob/main/frontend/src/img/pagina1.jpeg?raw=true', // Página 1
+                  'https://github.com/afonso1724/projeto_casamento/blob/main/frontend/src/img/pagina2.jpeg?raw=true'  // Página 2
                 ].map((src, idx) => (
-                  <img key={idx} src={src} alt={`Página ${idx + 1}`} className="w-full flex-shrink-0 h-96 object-cover" />
+                  <img key={idx} src={src} alt={`Página ${idx + 1}`} className="w-full flex-shrink-0 h-screen max-h-96 object-contain" />
                 ))}
               </div>
               <button
@@ -646,21 +643,21 @@ export default function InvitePage() {
                 <Heart size={40} />
               </div>
               <h4 className="text-lg font-bold text-slate-800 mb-2">Igreja</h4>
-              <p className="text-slate-600">Igreja de São Paulo, Luanda</p>
+              <p className="text-slate-600">Igreja Evangélica Batista em Angola IEBA</p>
             </div>
             <div className="text-center">
               <div className="text-4xl mb-4 text-[#ec4899] flex justify-center">
                 <MapPin size={40} />
               </div>
               <h4 className="text-lg font-bold text-slate-800 mb-2">Local do Salão</h4>
-              <p className="text-slate-600">Salão de Festas Elite, Luanda</p>
+              <p className="text-slate-600">Salão de Festas Kissonde, Luanda</p>
             </div>
             <div className="text-center">
               <div className="text-4xl mb-4 text-[#ec4899] flex justify-center">
                 <Heart size={40} />
               </div>
               <h4 className="text-lg font-bold text-slate-800 mb-2">Abertura do Salão</h4>
-              <p className="text-slate-600">15:30</p>
+              <p className="text-slate-600">19:00</p>
             </div>
           </motion.div>
         </div>
@@ -735,7 +732,7 @@ export default function InvitePage() {
         </div>
 
         <div className="relative z-10 max-w-4xl mx-auto text-center">
-          <h3 className="text-3xl font-bold font-serif mb-6 text-white">Afonso & Daniela</h3>
+          <h3 className="text-3xl font-bold font-serif mb-6 text-white">Zola & Regina</h3>
           <p className="text-slate-300 text-lg mb-4 leading-relaxed">
             Celebrando o amor que nos une e a jornada que compartilhamos. Este é o nosso grande dia.
           </p>
