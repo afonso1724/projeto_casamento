@@ -390,7 +390,7 @@ export default function InvitePage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: 1, duration: 0.8 }}
                 viewport={{ once: true }}
-                className="inline-block bg-[#25D366] text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-[#128C7E] transition-colors duration-300 shadow-lg hover:shadow-xl"
+                className="inline-block bg-[#D4AF37] text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-[#128C7E] transition-colors duration-300 shadow-lg hover:shadow-xl"
               >
                 Confirmar Presença via WhatsApp
               </motion.a>
