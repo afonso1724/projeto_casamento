@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Heart, ChevronLeft, ChevronRight, MapPin } from 'lucide-react';
+import { Heart, ChevronLeft, ChevronRight, MapPin, Wine, Utensils, Cake, ForkKnife } from 'lucide-react';
 
 const CONSELHOS = [
   {
@@ -78,6 +78,7 @@ export default function InvitePage() {
   const [error, setError] = useState(null);
   const [journeyIndices, setJourneyIndices] = useState([0, 0, 0, 0]);
   const [timeLeft, setTimeLeft] = useState({});
+  const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
     const fetchInviteData = async () => {
@@ -167,7 +168,7 @@ export default function InvitePage() {
   const guestName = inviteData?.nomeExibicao || 'Convidado';
 
   return (
-    <div className="bg-white overflow-hidden">
+    <div className="bg-[#fff5f7] overflow-hidden">
       {/* HERO SECTION (Parallax Enhanced) */}
       <motion.section
         initial={{ opacity: 0 }}
@@ -280,11 +281,14 @@ export default function InvitePage() {
               <Heart size={48} className="text-slate-600 fill-slate-600 mx-auto" />
             </motion.div>
 
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 font-serif">
+            <h2 className="text-4xl md:text-5xl font-bold text-[#ec4899] mb-4 font-serif">
               Olá, <span className="text-slate-700">{guestName}</span>
             </h2>
             <p className="text-xl text-gray-700 font-serif mb-6">
               Seja bem-vindo ao nosso grande dia!
+            </p>
+            <p className="text-slate-600 text-lg font-light mb-6">
+              A sua mesa é a mesa 1
             </p>
             <p className="text-slate-600 text-lg font-light">
               É uma honra ter você connosco. Navegue por esta página para descobrir todos os detalhes do nosso grande dia.
@@ -315,7 +319,7 @@ export default function InvitePage() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="text-4xl md:text-6xl font-bold text-slate-800 mb-16 font-serif tracking-wide"
+            className="text-4xl md:text-6xl font-bold text-[#ec4899] mb-16 font-serif tracking-wide"
           >
             Contagem Regressiva
           </motion.h2>
@@ -353,7 +357,6 @@ export default function InvitePage() {
                   { label: 'Dias', value: timeLeft.days || 0 },
                   { label: 'Horas', value: timeLeft.hours || 0 },
                   { label: 'Minutos', value: timeLeft.minutes || 0 },
-                  { label: 'Segundos', value: timeLeft.seconds || 0 },
                 ].map((item, idx) => (
                   <motion.div
                     key={idx}
@@ -378,70 +381,29 @@ export default function InvitePage() {
                 whileInView={{ opacity: 1 }}
                 transition={{ delay: 0.8, duration: 0.8 }}
                 viewport={{ once: true }}
-                className="text-xl md:text-2xl text-slate-600 font-light italic"
+                className="text-xl md:text-2xl text-slate-600 font-light italic mb-8"
               >
                 Até o grande dia do nosso casamento
               </motion.p>
+
+              <motion.a
+                href={`https://wa.me/244935678380?text=Olá! Confirmo minha presença no casamento de Afonso e Daniela. Meu nome é ${guestName}.`}
+                target="_blank"
+                rel="noopener noreferrer"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1, duration: 0.8 }}
+                viewport={{ once: true }}
+                className="inline-block bg-[#ec4899] text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-[#128C7E] transition-colors duration-300 shadow-lg hover:shadow-xl"
+              >
+                Confirmar Presença via WhatsApp
+              </motion.a>
             </motion.div>
           )}
         </div>
       </motion.section>
 
-      {/* AGENDA SECTION */}
-      <motion.section
-        id="agenda"
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        transition={{ duration: 0.8 }}
-        viewport={{ once: true }}
-        className="py-20 px-4 bg-white"
-      >
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-slate-800 text-center mb-16 font-serif">
-            Agenda do Evento
-          </h2>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="bg-gradient-to-br from-slate-50 to-white rounded-3xl shadow-2xl overflow-hidden border-4 border-slate-200 mb-12"
-          >
-            <div className="bg-gradient-to-r from-slate-800 to-slate-900 py-12 text-center px-6">
-              <h3 className="font-serif text-4xl text-white font-bold mb-2">Afonso & Daniela</h3>
-              <p className="text-slate-300 font-serif text-xl uppercase tracking-widest">07 de Agosto de 2026</p>
-            </div>
-
-            <div className="p-8">
-              <h4 className="text-2xl font-bold text-slate-800 mb-8 text-center font-serif">Cronograma</h4>
-
-              <div className="relative border-l-4 border-slate-400 ml-4 space-y-12">
-                {[
-                  { time: "15:30", event: "Chegada dos Convidados" },
-                  { time: "16:00", event: "Início da Cerimónia" },
-                  { time: "17:30", event: "Sessão de Fotos e Cocktail" },
-                  { time: "19:00", event: "Jantar de Gala" },
-                  { time: "21:00", event: "Corte do Bolo" },
-                  { time: "22:00", event: "Início da Festa / DJ" }
-                ].map((item, idx) => (
-                  <div key={idx} className="relative ml-8">
-                    <div className="absolute -left-[44px] top-1 w-6 h-6 bg-slate-600 rounded-full border-4 border-white shadow-md" />
-
-                    <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-6">
-                      <span className="text-slate-700 font-bold text-xl font-serif min-w-[80px]">
-                        {item.time}
-                      </span>
-                      <div className="bg-slate-50 p-4 rounded-xl flex-1 shadow-sm border border-slate-200">
-                        <p className="text-slate-800 font-medium text-lg">{item.event}</p>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </motion.section>
 
       {/* EXPERIÊNCIA GASTRONÓMICA SECTION */}
       <motion.section
@@ -453,16 +415,16 @@ export default function InvitePage() {
         className="py-20 px-4 bg-gradient-to-br from-gray-50 to-white"
       >
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 text-center mb-16 font-serif">
+          <h2 className="text-3xl md:text-4xl font-bold text-[#ec4899] text-center mb-16 font-serif">
             Experiência Gastronómica
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
-              { title: 'Bebidas', icon: '🍷', items: ['Vinhos Finos', 'Champanhe', 'Cocktails Especiais', 'Água com Gás'] },
-              { title: 'Pratos', icon: '🍽️', items: ['Grelhados Mistos', 'Peixe Fresco', 'Saladas Frescas', 'Massas Artesanais'] },
-              { title: 'Doces', icon: '🍰', items: ['Doces Tradicionais', 'Bolo de Casamento', 'Petit Fours', 'Frutas Tropicais'] },
-              { title: 'Petiscos', icon: '🥂', items: ['Aperitivos Gourmet', 'Queijos e Frios', 'Canapés', 'Tapas Variadas'] },
+              { title: 'Bebidas', icon: Wine, items: ['Vinhos Finos', 'Champanhe', 'Cocktails Especiais', 'Água com Gás'] },
+              { title: 'Pratos', icon: Utensils, items: ['Grelhados Mistos', 'Peixe Fresco', 'Saladas Frescas', 'Massas Artesanais'] },
+              { title: 'Doces', icon: Cake, items: ['Doces Tradicionais', 'Bolo de Casamento', 'Petit Fours', 'Frutas Tropicais'] },
+              { title: 'Petiscos', icon: ForkKnife, items: ['Aperitivos Gourmet', 'Queijos e Frios', 'Canapés', 'Tapas Variadas'] },
             ].map((card, idx) => (
               <motion.div
                 key={idx}
@@ -473,7 +435,9 @@ export default function InvitePage() {
                 whileHover={{ scale: 1.05, y: -5 }}
                 className="bg-white rounded-2xl p-8 border-2 border-slate-200 shadow-lg hover:shadow-2xl transition-all duration-300"
               >
-                <div className="text-4xl mb-4 text-center">{card.icon}</div>
+                <div className="text-4xl mb-4 text-center flex justify-center">
+                  <card.icon size={40} className="text-slate-600" />
+                </div>
                 <h3 className="text-2xl font-bold text-slate-800 mb-6 font-serif text-center">{card.title}</h3>
                 <ul className="space-y-3">
                   {card.items.map((item, i) => (
@@ -482,9 +446,9 @@ export default function InvitePage() {
                       initial={{ opacity: 0, x: -20 }}
                       whileInView={{ opacity: 1, x: 0 }}
                       transition={{ delay: (idx * 0.15) + (i * 0.1) }}
-                      className="text-gray-700 flex items-center gap-2"
+                      className="text-gray-700"
                     >
-                      <span className="text-rose-400">•</span> {item}
+                      {item}
                     </motion.li>
                   ))}
                 </ul>
@@ -504,7 +468,7 @@ export default function InvitePage() {
         className="py-20 px-4 bg-gradient-to-br from-rose-50 to-white"
       >
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 text-center mb-16 font-serif">
+          <h2 className="text-3xl md:text-4xl font-bold text-[#ec4899] text-center mb-16 font-serif">
             Nossa Jornada
           </h2>
 
@@ -579,43 +543,126 @@ export default function InvitePage() {
         viewport={{ once: true }}
         className="py-20 px-4 bg-gradient-to-br from-slate-50 to-white"
       >
-        <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-slate-800 text-center mb-16 font-serif">
-            Conselhos da Madrinha
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold text-[#ec4899] text-center mb-16 font-serif">
+            Conselho da Madrinha
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {CONSELHOS.map((conselho, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, y: 30, rotate: -2 }}
-                whileInView={{ opacity: 1, y: 0, rotate: 0 }}
-                transition={{ delay: idx * 0.15, type: 'spring', stiffness: 100 }}
-                viewport={{ once: true }}
-                whileHover={{
-                  scale: 1.03,
-                  rotate: 1,
-                  boxShadow: '0 25px 50px rgba(0,0,0,0.15)'
-                }}
-                className="bg-white rounded-2xl p-8 border border-slate-200 shadow-lg hover:shadow-2xl transition-all duration-500 group"
+          <motion.div
+            initial={{ opacity: 0, y: 30, rotate: -2 }}
+            whileInView={{ opacity: 1, y: 0, rotate: 0 }}
+            transition={{ delay: 0.15, type: 'spring', stiffness: 100 }}
+            viewport={{ once: true }}
+            whileHover={{
+              scale: 1.03,
+              rotate: 1,
+              boxShadow: '0 25px 50px rgba(0,0,0,0.15)'
+            }}
+            className="bg-white rounded-2xl p-8 border border-slate-200 shadow-lg hover:shadow-2xl transition-all duration-500 group relative"
+          >
+            <motion.div
+              animate={{ y: [0, -10, 0] }}
+              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+              className="absolute top-4 right-4 text-3xl text-pink-500"
+            >
+              ❤️
+            </motion.div>
+            <div className="text-center mb-6">
+              <h3 className="text-xl font-bold text-slate-800 font-serif mb-3">
+                {CONSELHOS[0].titulo}
+              </h3>
+            </div>
+            <p className="text-slate-600 text-center leading-relaxed font-light">
+              {CONSELHOS[0].descricao}
+            </p>
+          </motion.div>
+
+          {/* Imagem fixa com overlay */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.8 }}
+            viewport={{ once: true }}
+            className="mt-16 relative rounded-2xl overflow-hidden shadow-2xl"
+          >
+            <img
+              src="https://images.unsplash.com/photo-1519741497674-611481863552?w=800&h=400&fit=crop"
+              alt="Momento especial"
+              className="w-full h-64 object-cover"
+            />
+            <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+              <p className="text-white text-2xl font-serif italic text-center px-4">
+                Memórias que durarão para sempre
+              </p>
+            </div>
+          </motion.div>
+
+          {/* Carrossel Manual do Convidado */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.8 }}
+            viewport={{ once: true }}
+            className="mt-16"
+          >
+            <h3 className="text-2xl font-bold text-slate-800 text-center mb-8 font-serif">
+              Manual do Convidado
+            </h3>
+            <div className="relative overflow-hidden rounded-2xl shadow-2xl">
+              <div className="flex transition-transform duration-500 ease-in-out" style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
+                {[
+                  'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=600&h=400&fit=crop', // Capa
+                  'https://images.unsplash.com/photo-1465301046430-c52cc00e626d?w=600&h=400&fit=crop', // Página 1
+                  'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=600&h=400&fit=crop'  // Página 2
+                ].map((src, idx) => (
+                  <img key={idx} src={src} alt={`Página ${idx + 1}`} className="w-full flex-shrink-0 h-96 object-cover" />
+                ))}
+              </div>
+              <button
+                onClick={() => setCurrentSlide((prev) => (prev - 1 + 3) % 3)}
+                className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 shadow-lg z-10"
               >
-                <div className="text-center mb-6">
-                  <motion.div
-                    whileHover={{ scale: 1.2, rotate: 10 }}
-                    className="w-16 h-16 bg-gradient-to-br from-slate-600 to-slate-800 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:from-slate-700 group-hover:to-slate-900 transition-all duration-300"
-                  >
-                    <span className="text-2xl text-white font-bold">{idx + 1}</span>
-                  </motion.div>
-                  <h3 className="text-xl font-bold text-slate-800 font-serif mb-3">
-                    {conselho.titulo}
-                  </h3>
-                </div>
-                <p className="text-slate-600 text-center leading-relaxed font-light">
-                  {conselho.descricao}
-                </p>
-              </motion.div>
-            ))}
-          </div>
+                <ChevronLeft size={20} className="text-gray-800" />
+              </button>
+              <button
+                onClick={() => setCurrentSlide((prev) => (prev + 1) % 3)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 shadow-lg z-10"
+              >
+                <ChevronRight size={20} className="text-gray-800" />
+              </button>
+            </div>
+          </motion.div>
+
+          {/* Informações do Evento */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.7, duration: 0.8 }}
+            viewport={{ once: true }}
+            className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8"
+          >
+            <div className="text-center">
+              <div className="text-4xl mb-4 text-[#ec4899] flex justify-center">
+                <Heart size={40} />
+              </div>
+              <h4 className="text-lg font-bold text-slate-800 mb-2">Igreja</h4>
+              <p className="text-slate-600">Igreja de São Paulo, Luanda</p>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl mb-4 text-[#ec4899] flex justify-center">
+                <MapPin size={40} />
+              </div>
+              <h4 className="text-lg font-bold text-slate-800 mb-2">Local do Salão</h4>
+              <p className="text-slate-600">Salão de Festas Elite, Luanda</p>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl mb-4 text-[#ec4899] flex justify-center">
+                <Heart size={40} />
+              </div>
+              <h4 className="text-lg font-bold text-slate-800 mb-2">Abertura do Salão</h4>
+              <p className="text-slate-600">15:30</p>
+            </div>
+          </motion.div>
         </div>
       </motion.section>
 
@@ -629,7 +676,7 @@ export default function InvitePage() {
         className="py-20 px-4 bg-white"
       >
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-slate-800 text-center mb-12 font-serif">
+          <h2 className="text-3xl md:text-4xl font-bold text-[#ec4899] text-center mb-12 font-serif">
             <MapPin className="inline-block mr-2 text-slate-600" size={32} />
             Localização
           </h2>
@@ -663,7 +710,7 @@ export default function InvitePage() {
               href="https://www.google.com/maps/search/?api=1&query=Luanda+Angola"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 bg-gradient-to-r from-slate-600 to-slate-800 text-white px-8 py-4 rounded-full font-bold hover:shadow-xl hover:scale-105 transition-all duration-300"
+              className="inline-flex items-center gap-3 bg-[#ec4899] text-white px-8 py-4 rounded-full font-bold hover:shadow-xl hover:scale-105 transition-all duration-300"
             >
               <MapPin size={20} />
               Abrir no Google Maps
@@ -678,7 +725,7 @@ export default function InvitePage() {
         whileInView={{ opacity: 1 }}
         transition={{ duration: 0.8 }}
         viewport={{ once: true }}
-        className="py-16 px-4 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white relative overflow-hidden"
+        className="py-16 px-4 bg-gradient-to-br from-[#ec4899] via-slate-800 to-slate-900 text-white relative overflow-hidden"
       >
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-10">
@@ -687,66 +734,19 @@ export default function InvitePage() {
           }} />
         </div>
 
-        <div className="relative z-10 max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
-            {/* Navigation Links */}
-            <div className="md:col-span-2">
-              <h3 className="text-2xl font-bold font-serif mb-6 text-white">Navegação</h3>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <h4 className="font-semibold text-slate-300 mb-3">Sobre o Evento</h4>
-                  <ul className="space-y-2 text-sm">
-                    <li><a href="#contagem" className="text-slate-400 hover:text-white transition-colors">Contagem Regressiva</a></li>
-                    <li><a href="#agenda" className="text-slate-400 hover:text-white transition-colors">Agenda</a></li>
-                    <li><a href="#gastronomia" className="text-slate-400 hover:text-white transition-colors">Gastronomia</a></li>
-                  </ul>
-                </div>
-                <div>
-                  <h4 className="font-semibold text-slate-300 mb-3">Nossa História</h4>
-                  <ul className="space-y-2 text-sm">
-                    <li><a href="#jornada" className="text-slate-400 hover:text-white transition-colors">Nossa Jornada</a></li>
-                    <li><a href="#conselhos" className="text-slate-400 hover:text-white transition-colors">Conselhos</a></li>
-                    <li><a href="#localizacao" className="text-slate-400 hover:text-white transition-colors">Localização</a></li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            {/* Contact Info */}
-            <div>
-              <h3 className="text-2xl font-bold font-serif mb-6 text-white">Informações</h3>
-              <div className="space-y-3 text-sm text-slate-300">
-                <p><strong>Data:</strong><br />07 de Agosto de 2026</p>
-                <p><strong>Horário:</strong><br />15:30 - 02:00</p>
-                <p><strong>Local:</strong><br />Salão de Festas<br />Luanda, Angola</p>
-              </div>
-            </div>
-
-            {/* Social/Branding */}
-            <div>
-              <h3 className="text-2xl font-bold font-serif mb-6 text-white">Afonso & Daniela</h3>
-              <p className="text-slate-300 text-sm mb-4 leading-relaxed">
-                Celebrando o amor que nos une e a jornada que compartilhamos.
-                Este é o nosso grande dia.
-              </p>
-              <div className="flex items-center gap-2">
-                <Heart size={20} className="text-slate-500 fill-slate-500" />
-                <span className="text-slate-300 font-medium">Para Sempre</span>
-              </div>
-            </div>
+        <div className="relative z-10 max-w-4xl mx-auto text-center">
+          <h3 className="text-3xl font-bold font-serif mb-6 text-white">Afonso & Daniela</h3>
+          <p className="text-slate-300 text-lg mb-4 leading-relaxed">
+            Celebrando o amor que nos une e a jornada que compartilhamos. Este é o nosso grande dia.
+          </p>
+          <div className="flex items-center justify-center gap-2 mb-8">
+            <Heart size={20} className="text-[#ec4899] fill-[#ec4899]" />
+            <span className="text-slate-300 font-medium">Para Sempre</span>
           </div>
-
-          {/* Bottom Bar */}
-          <div className="border-t border-slate-700 pt-8 mt-8">
-            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-              <p className="text-slate-400 text-sm">
-                © 2026 SynerTech - Experiência de Casamento Digital
-              </p>
-              <div className="flex items-center gap-6 text-sm text-slate-400">
-                <span>Todos os direitos reservados</span>
-              </div>
-            </div>
-          </div>
+          <p className="text-slate-400 text-sm">
+            2026 SynerTech - Experiência de Casamento Digital<br />
+            Todos os direitos reservados
+          </p>
         </div>
       </motion.section>
 
