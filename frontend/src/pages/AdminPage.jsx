@@ -165,9 +165,13 @@ const handleCreateGuest = async (e) => {
   const handleDeleteGuest = async (id) => {
     if (confirm('Tem certeza que deseja deletar este convidado?')) {
       try {
-        await axios.delete(`${API_URL}/admin/convidados/${id}`, {
-          headers: { 'x-admin-token': ADMIN_TOKEN },
-        });
+        const { error } = await supabase
+          .from('convidados')
+          .delete()
+          .eq('id', id);
+        
+        if (error) throw error;
+        
         setMessage({ type: 'success', text: 'Convidado deletado com sucesso' });
         fetchConvidados();
         fetchStats();
