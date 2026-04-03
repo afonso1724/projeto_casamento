@@ -176,7 +176,7 @@ export default function InvitePage() {
           className="absolute inset-0"
           style={{
             backgroundImage:
-              'url(https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=1400&h=900&fit=crop)',
+              'url(https://github.com/afonso1724/projeto_casamento/blob/main/frontend/src/img/zolanakela.jpeg?raw=true)',
             backgroundAttachment: 'fixed',
             backgroundRepeat: 'no-repeat',
             backgroundSize: 'cover',
