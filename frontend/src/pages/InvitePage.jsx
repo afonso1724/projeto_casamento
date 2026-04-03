@@ -6,8 +6,8 @@ import { Heart, ChevronLeft, ChevronRight, MapPin, Wine, Utensils, Cake, ForkKni
 
 const CONSELHOS = [
   {
-    titulo: 'Elegância no Vestuário',
-    descricao: 'Traga sapatos confortáveis e vista-se com elegância para celebrar este momento especial.'
+    titulo: 'Antes de ir embora, tire um tempinho para se despedir dos noivos.',
+    descricao: 'Convidados, não se esqueça! O casamento é a celebração de duas vidas se unindo para a construção de um furuto e você foi convidado para celebrar e não criticar!'
   },
   {
     titulo: 'Preparação Emocional',
