@@ -611,9 +611,9 @@ export default function InvitePage() {
             <div className="relative overflow-hidden rounded-2xl shadow-2xl">
               <div className="flex transition-transform duration-500 ease-in-out" style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
                 {[
-                  'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=600&h=400&fit=crop', // Capa
-                  'https://images.unsplash.com/photo-1465301046430-c52cc00e626d?w=600&h=400&fit=crop', // Página 1
-                  'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=600&h=400&fit=crop'  // Página 2
+                  'frontend/src/img/capa.jpeg', // Capa
+                  '../frontend/img/pagina1.jpg', // Página 1
+                  '../frontend/img/pagina2.jpg'  // Página 2
                 ].map((src, idx) => (
                   <img key={idx} src={src} alt={`Página ${idx + 1}`} className="w-full flex-shrink-0 h-96 object-cover" />
                 ))}
