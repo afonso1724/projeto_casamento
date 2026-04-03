@@ -164,7 +164,7 @@ export default function InvitePage() {
   const guestName = inviteData?.nomeExibicao || 'Convidado';
 
   return (
-    <div className="bg-[#fff5f7] overflow-hidden">
+    <div className="bg-[#E7AC9A] overflow-hidden">
       {/* HERO SECTION (Parallax Enhanced) */}
       <motion.section
         initial={{ opacity: 0 }}
@@ -277,7 +277,7 @@ export default function InvitePage() {
               <Heart size={48} className="text-rose-400 fill-rose-400 mx-auto" />
             </motion.div>
 
-            <h2 className="text-4xl md:text-5xl font-bold text-[#ec4899] mb-4 font-serif">
+            <h2 className="text-4xl md:text-5xl font-bold text-[#D4AF37] mb-4 font-serif">
               Olá, <span className="text-slate-700">{guestName}</span>
             </h2>
             <p className="text-xl text-gray-700 font-serif mb-6">
@@ -315,7 +315,7 @@ export default function InvitePage() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="text-4xl md:text-6xl font-bold text-[#ec4899] mb-16 font-serif tracking-wide"
+            className="text-4xl md:text-6xl font-bold text-[#D4AF37] mb-16 font-serif tracking-wide"
           >
             Contagem Regressiva
           </motion.h2>
@@ -390,7 +390,7 @@ export default function InvitePage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: 1, duration: 0.8 }}
                 viewport={{ once: true }}
-                className="inline-block bg-[#ec4899] text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-[#128C7E] transition-colors duration-300 shadow-lg hover:shadow-xl"
+                className="inline-block bg-[#25D366] text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-[#128C7E] transition-colors duration-300 shadow-lg hover:shadow-xl"
               >
                 Confirmar Presença via WhatsApp
               </motion.a>
@@ -411,7 +411,7 @@ export default function InvitePage() {
         className="py-20 px-4 bg-gradient-to-br from-gray-50 to-white"
       >
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-[#ec4899] text-center mb-16 font-serif">
+          <h2 className="text-3xl md:text-4xl font-bold text-[#D4AF37] text-center mb-16 font-serif">
             Experiência Gastronómica
           </h2>
 
@@ -464,7 +464,7 @@ export default function InvitePage() {
         className="py-20 px-4 bg-gradient-to-br from-rose-50 to-white"
       >
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-[#ec4899] text-center mb-16 font-serif">
+          <h2 className="text-3xl md:text-4xl font-bold text-[#D4AF37] text-center mb-16 font-serif">
             Nossa Jornada
           </h2>
 
@@ -540,7 +540,7 @@ export default function InvitePage() {
         className="py-20 px-4 bg-gradient-to-br from-slate-50 to-white"
       >
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-[#ec4899] text-center mb-16 font-serif">
+          <h2 className="text-3xl md:text-4xl font-bold text-[#D4AF37] text-center mb-16 font-serif">
             Conselho da Madrinha
           </h2>
 
@@ -559,7 +559,7 @@ export default function InvitePage() {
             <motion.div
               animate={{ y: [0, -10, 0] }}
               transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-              className="absolute top-4 right-4 text-3xl text-pink-500"
+              className="absolute top-4 right-4 text-3xl text-[#D4AF37]"
             >
               ❤️
             </motion.div>
@@ -639,21 +639,21 @@ export default function InvitePage() {
             className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8"
           >
             <div className="text-center">
-              <div className="text-4xl mb-4 text-[#ec4899] flex justify-center">
+              <div className="text-4xl mb-4 text-[#D4AF37] flex justify-center">
                 <Heart size={40} />
               </div>
               <h4 className="text-lg font-bold text-slate-800 mb-2">Igreja</h4>
               <p className="text-slate-600">Igreja Evangélica Batista em Angola IEBA</p>
             </div>
             <div className="text-center">
-              <div className="text-4xl mb-4 text-[#ec4899] flex justify-center">
+              <div className="text-4xl mb-4 text-[#D4AF37] flex justify-center">
                 <MapPin size={40} />
               </div>
               <h4 className="text-lg font-bold text-slate-800 mb-2">Local do Salão</h4>
               <p className="text-slate-600">Salão de Festas Kissonde, Luanda</p>
             </div>
             <div className="text-center">
-              <div className="text-4xl mb-4 text-[#ec4899] flex justify-center">
+              <div className="text-4xl mb-4 text-[#D4AF37] flex justify-center">
                 <Heart size={40} />
               </div>
               <h4 className="text-lg font-bold text-slate-800 mb-2">Abertura do Salão</h4>
@@ -673,7 +673,7 @@ export default function InvitePage() {
         className="py-20 px-4 bg-white"
       >
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-[#ec4899] text-center mb-12 font-serif">
+          <h2 className="text-3xl md:text-4xl font-bold text-[#D4AF37] text-center mb-12 font-serif">
             <MapPin className="inline-block mr-2 text-slate-600" size={32} />
             Localização
           </h2>
@@ -707,7 +707,7 @@ export default function InvitePage() {
               href="https://maps.app.goo.gl/h6krVydgAqrvice27"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 bg-[#ec4899] text-white px-8 py-4 rounded-full font-bold hover:shadow-xl hover:scale-105 transition-all duration-300"
+              className="inline-flex items-center gap-3 bg-[#D4AF37] text-white px-8 py-4 rounded-full font-bold hover:shadow-xl hover:scale-105 transition-all duration-300"
             >
               <MapPin size={20} />
               Abrir no Google Maps
@@ -722,7 +722,7 @@ export default function InvitePage() {
         whileInView={{ opacity: 1 }}
         transition={{ duration: 0.8 }}
         viewport={{ once: true }}
-        className="py-16 px-4 bg-gradient-to-br from-[#ec4899] via-slate-800 to-slate-900 text-white relative overflow-hidden"
+        className="py-16 px-4 bg-gradient-to-br from-[#D4AF37] via-slate-800 to-slate-900 text-white relative overflow-hidden"
       >
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-10">
@@ -737,7 +737,7 @@ export default function InvitePage() {
             Celebrando o amor que nos une e a jornada que compartilhamos. Este é o nosso grande dia.
           </p>
           <div className="flex items-center justify-center gap-2 mb-8">
-            <Heart size={20} className="text-[#ec4899] fill-[#ec4899]" />
+            <Heart size={20} className="text-[#D4AF37] fill-[#D4AF37]" />
             <span className="text-slate-300 font-medium">Para Sempre</span>
           </div>
           <p className="text-slate-400 text-sm">
